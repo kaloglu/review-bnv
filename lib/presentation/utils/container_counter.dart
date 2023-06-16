@@ -1,0 +1,41 @@
+import 'package:cihan_app/presentation/utils/spacing.dart';
+import 'package:flutter/material.dart';
+
+import '../../constants/text_styles.dart';
+
+class CounterWithContainerIcon extends StatelessWidget {
+  final String count;
+  final String imagePath;
+  const CounterWithContainerIcon({
+    super.key,
+    required this.count,
+    required this.imagePath,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        color: const Color(0XFFdbf0f9),
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              imagePath,
+              height: 28,
+              width: 28,
+              color: const Color(0xFF0f1d41),
+            ),
+            8.pw,
+            Text(
+              count,
+              textAlign: TextAlign.center,
+              style: kLargeTextStyle,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

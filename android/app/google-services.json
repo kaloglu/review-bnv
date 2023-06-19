@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "414030755976",
+    "firebase_url": "https://bedavanevar-2019.firebaseio.com",
+    "project_id": "bedavanevar-2019",
+    "storage_bucket": "bedavanevar-2019.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414030755976:android:3c7d3fdb10c13056db473d",
+        "android_client_info": {
+          "package_name": "com.kaloglu.bedavanevar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "414030755976-ug54d1h4sv3dl1skstsmc9afqklt9dhk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kaloglu.bedavanevar",
+            "certificate_hash": "5d416c0204f5b65ea000ac24ecedbf3a4c650cc4"
+          }
+        },
+        {
+          "client_id": "414030755976-onqmorfkjqpv5rh3e1tcvjt7c2r291st.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0o4oEtRuaNYgaLD8xyNN1shmmDZ9-3rY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "414030755976-k0n485l1icsoon5s910e7ttpnm883nqs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "414030755976-1dblmam92an86gjh0j7dsblvhj6t3i2f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kaloglu.BedavaNeVar"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

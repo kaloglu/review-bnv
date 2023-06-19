@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>414030755976-hnijosttmhj5a15geg2ms6vpiedbhnde.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.414030755976-hnijosttmhj5a15geg2ms6vpiedbhnde</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>414030755976-090mhmg7jlbb9uvs9da41otbr7k6ug6g.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCek-GYYKmxEk6gsKm09UnBfIjxcoZkpOA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>414030755976</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.kaloglu.bedavanevar</string>
+	<key>PROJECT_ID</key>
+	<string>bedavanevar-2019</string>
+	<key>STORAGE_BUCKET</key>
+	<string>bedavanevar-2019.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:414030755976:ios:4e1f36c41279c9cbdb473d</string>
+	<key>DATABASE_URL</key>
+	<string>https://bedavanevar-2019.firebaseio.com</string>
+</dict>
+</plist>

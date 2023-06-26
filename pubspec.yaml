@@ -13,11 +13,34 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  google_fonts: ^5.0.0
+  google_fonts: ^4.0.3
   eva_icons_flutter: ^3.1.0
   flutter_swiper_null_safety: ^1.0.2
   chip_list: ^2.4.3+8
   firebase_core: ^2.14.0
+  google_sign_in: ^5.0.7
+  flutter_facebook_auth: ^4.0.1
+  twitter_login: ^4.4.1
+  firebase_auth: any
+  firebase_ui_auth: any
+  desktop_webview_auth: ^0.0.12
+  http: any
+  flutter_svg: any
+  firebase_ui_oauth: any
+  cloud_firestore: ^4.8.1
+  firebase_ui_oauth_google: any
+  firebase_ui_oauth_facebook: any
+  firebase_ui_oauth_twitter: ^1.2.3
+  firebase_phone_auth_handler: any
+  pin_input_text_field: any
+  progress_state_button: ^1.0.4
+  pinput: any
+  flutter_riverpod: ^2.3.6
+
+  easy_container: ^1.0.4
+  intl_phone_field: ^3.1.0
+  firebase_app_check: ^0.1.4+3
+
 
 dev_dependencies:
   flutter_test:

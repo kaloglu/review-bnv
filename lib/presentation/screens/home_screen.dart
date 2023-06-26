@@ -1,13 +1,16 @@
 import 'package:cihan_app/constants/text_styles.dart';
 import 'package:cihan_app/presentation/screens/product_details.dart';
 import 'package:cihan_app/presentation/screens/profile_screen.dart';
+
 import 'package:cihan_app/presentation/utils/my_textfield.dart';
 import 'package:cihan_app/presentation/utils/spacing.dart';
+
 import 'package:flutter/material.dart';
 
 import '../utils/count_with_icon.dart';
 
 class HomeScreen extends StatelessWidget {
+  static const id = 'HomeScreen';
   const HomeScreen({super.key});
 
   @override
@@ -27,7 +30,7 @@ class HomeScreen extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const ProfileScreen(),
+                  builder: (context) =>  const ProfileScreen(),
                 ),
               );
             },

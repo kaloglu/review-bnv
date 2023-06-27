@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +5,6 @@ import '../../presentation/screens/home_screen.dart';
 import '../utils/helpers.dart';
 import '../widgets/custom_loader.dart';
 import '../widgets/pin_input_field.dart';
-
 
 class VerifyPhoneNumberScreen extends StatefulWidget {
   static const id = 'VerifyPhoneNumberScreen';
@@ -76,7 +73,10 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
         autoRetrievalTimeOutDuration: const Duration(seconds: 60),
         otpExpirationDuration: const Duration(seconds: 60),
         onCodeSent: () {
-          log(VerifyPhoneNumberScreen.id, msg: 'OTP sent!',);
+          log(
+            VerifyPhoneNumberScreen.id,
+            msg: 'OTP sent!',
+          );
         },
         onLoginSuccess: (userCredential, autoVerified) async {
           log(
@@ -140,7 +140,10 @@ class _VerifyPhoneNumberScreenState extends State<VerifyPhoneNumberScreen>
                   TextButton(
                     onPressed: controller.isOtpExpired
                         ? () async {
-                            log(VerifyPhoneNumberScreen.id, msg: 'Resend OTP',);
+                            log(
+                              VerifyPhoneNumberScreen.id,
+                              msg: 'Resend OTP',
+                            );
                             await controller.sendOTP();
                           }
                         : null,

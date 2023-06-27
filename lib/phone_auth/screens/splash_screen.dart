@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../presentation/screens/home_screen.dart';
-import '../screens/home_screenss.dart';
 import '../utils/globals.dart';
 import '../widgets/custom_loader.dart';
 import 'authentication_screen.dart';
-
 
 class SplashScreen extends StatefulWidget {
   static const id = 'SplashScreen';

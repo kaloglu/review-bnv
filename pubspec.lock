@@ -261,10 +261,10 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_ui_auth
-      sha256: "97fc61ac046c105c4292d1170bcc16a76f9f72de0e98afb44547c29ba69078a4"
+      sha256: efb4a77c2784158c1b332594499bd7e1b4c59d5d3bc5d694b5aae6ba5b6e249b
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.3"
+    version: "1.5.0"
   firebase_ui_localizations:
     dependency: transitive
     description:
@@ -274,13 +274,13 @@ packages:
     source: hosted
     version: "1.5.0"
   firebase_ui_oauth:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: firebase_ui_oauth
-      sha256: "4c55c00b92dcebeedd60914833f64a1211e7495725222e5189441c000d8563dd"
+      sha256: "1dfbb637093419809a1451b2550ac57180c91580ba15cad71332b16282785f17"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.3"
+    version: "1.4.4"
   firebase_ui_oauth_facebook:
     dependency: "direct main"
     description:
@@ -364,7 +364,7 @@ packages:
     source: hosted
     version: "2.3.6"
   flutter_svg:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_svg
       sha256: "8c5d68a82add3ca76d792f058b186a0599414f279f00ece4830b9b231b570338"

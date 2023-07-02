@@ -34,6 +34,9 @@ class LoginScreen extends StatelessWidget {
                 50.ph,
                 MyButton(
                   onTap: () {
+
+
+
                     // Navigator.of(context).push(
                     //   MaterialPageRoute(
                     //     builder: (context) => const HomeScreen(),
@@ -48,11 +51,13 @@ class LoginScreen extends StatelessWidget {
                 12.ph,
                 MyButton(
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const HomeScreen(),
-                      ),
-                    );
+
+
+                    // Navigator.of(context).push(
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const HomeScreen(),
+                    //   ),
+                    // );
                   },
                   title: 'Twitter',
                   bgColor: AppColors.primaryColor,
@@ -62,7 +67,6 @@ class LoginScreen extends StatelessWidget {
                 12.ph,
                 MyButton(
                   onTap: () {
-                    signInWithFacebook();
 
                     // Navigator.of(context).push(
                     //   MaterialPageRoute(

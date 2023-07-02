@@ -2,7 +2,6 @@ import 'package:cihan_app/presentation/utils/icon_buttons.dart';
 import 'package:cihan_app/presentation/utils/spacing.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 import '../../constants/text_styles.dart';
@@ -24,16 +23,19 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(onPressed: (){
-            FirebaseAuth.instance.signOut();
-            // SignedOutAction((context) {
-            //   Navigator.of(context).pushReplacement(
-            //     MaterialPageRoute(
-            //       builder: (context) => const SignInScreen(),
-            //     ),
-            //   );
-            // });
-          },color: Colors.black, icon: Icon(Icons.account_box_sharp)),
+          IconButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                // SignedOutAction((context) {
+                //   Navigator.of(context).pushReplacement(
+                //     MaterialPageRoute(
+                //       builder: (context) => const SignInScreen(),
+                //     ),
+                //   );
+                // });
+              },
+              color: Colors.black,
+              icon: const Icon(Icons.account_box_sharp)),
           IconButton(
             onPressed: () {},
             icon: const Icon(
@@ -146,7 +148,6 @@ class ProfileScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               MyIconButtons(
-
                 icon: EvaIcons.google,
               ),
               MyIconButtons(
@@ -161,7 +162,6 @@ class ProfileScreen extends StatelessWidget {
               MyIconButtons(
                 icon: EvaIcons.logOut,
               ),
-
             ],
           )
         ],

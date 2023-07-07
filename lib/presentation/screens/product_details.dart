@@ -12,15 +12,15 @@ class ProductDetails extends StatelessWidget {
     required this.title,
     required this.imagePath,
     required this.description,
-    required this.ticketCount,
-    required this.attendeeCount,
+   // required this.ticketCount,
+    //required this.attendeeCount,
   }) : super(key: key);
 
   final String title;
   final String imagePath;
   final String description;
-  final String ticketCount;
-  final String attendeeCount;
+//  final String ticketCount;
+  //final String attendeeCount;
 
   @override
   Widget build(BuildContext context) {
@@ -127,19 +127,19 @@ class ProductDetails extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      CountWithIcon(
-                        iconPath: 'assets/images/ticket1.png',
-                        count: ticketCount,
-                      ),
-                      30.pw,
-                      CountWithIcon(
-                        iconPath: 'assets/images/person1.png',
-                        count: attendeeCount,
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     CountWithIcon(
+                  //       iconPath: 'assets/images/ticket1.png',
+                  //       count: ticketCount,
+                  //     ),
+                  //     30.pw,
+                  //     CountWithIcon(
+                  //       iconPath: 'assets/images/person1.png',
+                  //       count: attendeeCount,
+                  //     ),
+                  //   ],
+                  // ),
                   const SizedBox(
                     height: 16,
                   ),

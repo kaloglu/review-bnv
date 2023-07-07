@@ -6,6 +6,7 @@ import 'package:firebase_ui_oauth_facebook/firebase_ui_oauth_facebook.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:firebase_ui_oauth_twitter/firebase_ui_oauth_twitter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -15,19 +16,19 @@ Future<void> main() async {
   );
 
   FirebaseUIAuth.configureProviders([
-    GoogleProvider(clientId: googleClientId),
-    FacebookProvider(clientId: facebookId),
+    GoogleProvider(clientId: Keys().googleClientId),
+    FacebookProvider(clientId: Keys().facebookId),
     TwitterProvider(
-      apiKey: twitterApiKey,
-      apiSecretKey: twitterApiSecreteKey,
-      redirectUri: twitterRedirectUri,
+      apiKey: Keys().twitterApiKey,
+      apiSecretKey: Keys().twitterApiSecreteKey,
+      redirectUri: Keys().twitterRedirectUri,
     ),
     PhoneAuthProvider(),
   ]);
 
-  runApp(
-    const MyApp(),
-  );
+  runApp(const ProviderScope(child: 
+    MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

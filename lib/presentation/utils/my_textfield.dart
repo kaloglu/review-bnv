@@ -2,19 +2,26 @@ import 'package:cihan_app/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
-  const MyTextField({
+   MyTextField({
     Key? key,
+   
     required this.hintText,
     required this.inputType,
     required this.obsecureText,
     required this.icon,
     required this.onTap,
+    required this.onChanged,
+
+    
   }) : super(key: key);
   final String hintText;
+
   final TextInputType inputType;
+  TextEditingController controller = TextEditingController();
   final bool obsecureText;
   final IconData icon;
   final Function onTap;
+  final Function onChanged;
   @override
   Widget build(BuildContext context) {
     return SizedBox(

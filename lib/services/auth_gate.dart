@@ -78,7 +78,7 @@ class AuthGate extends StatelessWidget {
                   );
                 },
                 '/home': (context) {
-                  return const HomeScreen();
+                  return  HomeScreen();
                 },
                 '/phone': (context) {
                   return PhoneInputScreen(
@@ -116,7 +116,7 @@ class AuthGate extends StatelessWidget {
               debugShowCheckedModeBanner: false,
             );
           }
-          return const HomeScreen();
+          return  HomeScreen();
         });
   }
 }

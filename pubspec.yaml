@@ -33,6 +33,15 @@ dependencies:
   flutter_riverpod: ^2.3.6
   firebase_app_check: ^0.1.4+3
   intl: any
+  shimmer: ^3.0.0
+  cached_network_image: ^3.2.3
+  flutter_html: ^3.0.0-beta.2
+  chips_choice: ^3.0.0
+  anim_search_bar: ^2.0.3
+  flutter_timer_countdown: ^1.0.5
+  rxdart: ^0.27.7
+  hooks_riverpod: ^2.3.6
+  
 
 
 dev_dependencies:

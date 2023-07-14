@@ -1,169 +1,205 @@
 import 'package:cihan_app/constants/text_styles.dart';
 import 'package:cihan_app/presentation/utils/spacing.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
-
+import '../../providers/product_stream_provider.dart';
+import '../../providers/product_detail_time_provider.dart';
 import '../utils/count_with_icon.dart';
 import '../utils/reusable_small_btn.dart';
 
-class ProductDetails extends StatelessWidget {
+final selectedProductStartDateProvider =
+    Provider<DateTime>((ref) => throw UnimplementedError());
+
+class ProductDetails extends ConsumerWidget {
   const ProductDetails({
     Key? key,
     required this.title,
-    required this.imagePath,
     required this.description,
-   // required this.ticketCount,
-    //required this.attendeeCount,
+    required this.requiredTickets,
+    required this.attendeeCount,
+    required this.statusColor,
+    required this.images,
+    required this.documentId,
+    required this.remainingTime,
   }) : super(key: key);
-
   final String title;
-  final String imagePath;
   final String description;
-//  final String ticketCount;
-  //final String attendeeCount;
+  final String remainingTime;
+  final String requiredTickets;
+  final String attendeeCount;
+  final Color statusColor;
+  final String documentId;
+  final List<dynamic> images;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
+  Widget build(BuildContext context, WidgetRef ref) {
+    debugPrint('NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN');
+    final productInfoImages = ref.watch(productInfoImagesStreamProvider);
+
+    return Consumer(builder: (context, ref, _) {
+      final remainingTime = ref.watch(
+        remainingTimeProvider(ref.read(selectedProductStartDateProvider)),
+      );
+
+      return SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.grey.shade100,
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            elevation: 0.0,
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+              ),
+            ),
           ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(top: 10),
-        height: 120,
-        width: MediaQuery.of(context).size.width,
-        color: const Color(0XFFFFFFFF),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+          bottomNavigationBar: Container(
+            padding: const EdgeInsets.only(top: 10),
+            height: 120,
+            width: MediaQuery.of(context).size.width,
+            color: const Color(0XFFFFFFFF),
+            child: Column(
               children: [
-                ReusableSmallButton(
-                  title: 'Enroll',
-                  onTap: () {},
-                ),
-                12.pw,
-                ReusableSmallButton(
-                  title: 'Earn',
-                  onTap: () {},
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ReusableSmallButton(
+                      title: 'Enroll',
+                      onTap: () {},
+                    ),
+                    12.pw,
+                    ReusableSmallButton(
+                      title: 'Earn',
+                      onTap: () {},
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 300,
-              width: MediaQuery.of(context).size.width,
-              child: Swiper(
-                autoplay: true,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                    height: 300,
                     width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(16),
-                        bottomRight: Radius.circular(16),
-                      ),
-                      image: DecorationImage(
-                        image: AssetImage(
-                          swiperImages[index],
-                        ),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  );
-                },
-                itemCount: 3,
-                pagination: const SwiperPagination(
-                  builder: DotSwiperPaginationBuilder(
-                    activeColor: Colors.blue,
-                    color: Colors.white,
+                    child: productInfoImages.when(
+                        data: (imagesData) {
+                          final images = imagesData.firstWhere(
+                              (data) => data['id'] == documentId)['images'];
+                          return Swiper(
+                            autoplay: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              final imagePath = images[index]['path'] as String;
+
+                              return Container(
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(
+                                    bottomLeft: Radius.circular(16),
+                                    bottomRight: Radius.circular(16),
+                                  ),
+                                  image: DecorationImage(
+                                    image: NetworkImage(imagePath),
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              );
+                            },
+                            itemCount: images.length,
+                            pagination: const SwiperPagination(
+                              builder: DotSwiperPaginationBuilder(
+                                activeColor: Colors.blue,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        },
+                        error: (error, stackTrace) =>
+                            Center(child: Text(error.toString())),
+                        loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ))),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
                   ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                title,
+                                style: kLargeTextStyle,
+                              ),
+                            ],
+                          ),
                           Text(
-                            title,
-                            style: kLargeTextStyle,
+                            remainingTime.when(
+                              data: (value) => value ?? '',
+                              loading: () => 'Loading',
+                              error: (error, stackTrace) => 'Error',
+                            ),
+                            style: TextStyle(
+                              color: statusColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          CountWithIcon(
+                            iconPath: 'assets/images/ticket1.png',
+                            count: requiredTickets.toString(),
+                          ),
+                          30.pw,
+                          CountWithIcon(
+                            iconPath: 'assets/images/person1.png',
+                            count: attendeeCount,
                           ),
                         ],
                       ),
+                      const SizedBox(
+                        height: 16,
+                      ),
                       Text(
-                        'Time/Progress',
+                        'Description',
                         style: kMediumTextStyle,
+                      ),
+                      Html(
+                        data: description,
+                        style: {
+                          'body': Style(
+                            fontSize: FontSize(14.0),
+                            lineHeight: const LineHeight(1.4),
+                          ),
+                        },
                       ),
                     ],
                   ),
-                  // Row(
-                  //   children: [
-                  //     CountWithIcon(
-                  //       iconPath: 'assets/images/ticket1.png',
-                  //       count: ticketCount,
-                  //     ),
-                  //     30.pw,
-                  //     CountWithIcon(
-                  //       iconPath: 'assets/images/person1.png',
-                  //       count: attendeeCount,
-                  //     ),
-                  //   ],
-                  // ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  Text(
-                    'Description',
-                    style: kMediumTextStyle,
-                  ),
-                  Text(
-                    description,
-                    style: kSmallTextStyle,
-                    textAlign: TextAlign.justify,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
-
-final List<String> swiperImages = [
-  "assets/images/book1.jpg",
-  "assets/images/book2.jpg",
-  "assets/images/book3.jpg",
-];

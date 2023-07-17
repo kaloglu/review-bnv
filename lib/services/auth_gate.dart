@@ -1,45 +1,122 @@
 import 'package:cihan_app/presentation/screens/home_screen.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
-import 'package:firebase_ui_oauth_facebook/firebase_ui_oauth_facebook.dart';
-import 'package:firebase_ui_oauth_twitter/firebase_ui_oauth_twitter.dart';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import '../constants/text_styles.dart';
+import '../presentation/utils/auth_decoration.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      initialData: FirebaseAuth.instance.currentUser,
-      builder: (context, snapshot) {
-        // User is not signed in
-        if (!snapshot.hasData) {
-          return SignInScreen(showAuthActionSwitch: false, providers: [
-            //EmailProviderConfiguration(),
-            GoogleProvider(
-              clientId:
-                  '414030755976-onqmorfkjqpv5rh3e1tcvjt7c2r291st.apps.googleusercontent.com',
-            ),
-            FacebookProvider(
-                clientId: '1319317821552127',
-                redirectUri:
-                    'https://bedavanevar-2019.firebaseapp.com/__/auth/handler'),
-            TwitterProvider(
-                apiKey: 'AOYbJ7ofco7iYRbKZULljwGw2',
-                apiSecretKey:
-                    '6VhRKhLqzg95IITPaOfoy3zIlSzd3l93EchLzFdqv268cQFuKA',
-                redirectUri: 'cihan-app://'),
-          ]);
-        }
-
-        return const HomeScreen();
-      },
+    final buttonStyle = ButtonStyle(
+      padding: MaterialStateProperty.all(const EdgeInsets.all(12)),
+      shape: MaterialStateProperty.all(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
     );
+
+    return StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        initialData: FirebaseAuth.instance.currentUser,
+        builder: (context, snapshot) {
+          // User is not signed in
+          if (!snapshot.hasData) {
+            return MaterialApp(
+              theme: ThemeData(
+                brightness: Brightness.light,
+                visualDensity: VisualDensity.comfortable,
+                useMaterial3: true,
+                inputDecorationTheme: const InputDecorationTheme(
+                  border: OutlineInputBorder(),
+                ),
+                elevatedButtonTheme:
+                    ElevatedButtonThemeData(style: buttonStyle),
+                textButtonTheme: TextButtonThemeData(style: buttonStyle),
+                outlinedButtonTheme:
+                    OutlinedButtonThemeData(style: buttonStyle),
+              ),
+              routes: {
+                '/': (context) {
+                  return SignInScreen(
+                    sideBuilder: sideIcon(Icons.account_box_sharp),
+                    subtitleBuilder: (context, action) {
+                      return Padding(
+                          padding: const EdgeInsets.only(bottom: 8, left: 7),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Hey there,',
+                                style: kMediumTextStyle,
+                              ),
+                              Text(
+                                'Welcome ',
+                                style: kLargeTextStyle,
+                              ),
+                            ],
+                          ));
+                    },
+                    footerBuilder: (context, action) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 50),
+                          child: Text(
+                            'By signing in, you agree to our terms and conditions.',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      );
+                    },
+                    showAuthActionSwitch: false,
+                    actions: [
+                      VerifyPhoneAction((context, _) {
+                        Navigator.pushNamed(context, '/phone');
+                      }),
+                    ],
+                  );
+                },
+                '/home': (context) {
+                  return const HomeScreen();
+                },
+                '/phone': (context) {
+                  return PhoneInputScreen(
+                    actions: [
+                      SMSCodeRequestedAction((context, action, flowKey, phone) {
+                        Navigator.of(context).pushReplacementNamed(
+                          '/sms',
+                          arguments: {
+                            'action': action,
+                            'flowKey': flowKey,
+                            'phone': phone,
+                          },
+                        );
+                      }),
+                    ],
+                    headerBuilder: headerIcon(Icons.phone),
+                    sideBuilder: sideIcon(Icons.phone),
+                  );
+                },
+                '/sms': (context) {
+                  final arguments = ModalRoute.of(context)?.settings.arguments
+                      as Map<String, dynamic>?;
+
+                  return SMSCodeInputScreen(
+                    actions: [
+                      AuthStateChangeAction<SignedIn>((context, state) {
+                        Navigator.of(context).pushReplacementNamed('/home');
+                      })
+                    ],
+                    flowKey: arguments?['flowKey'],
+                    action: arguments?['action'],
+                  );
+                },
+              },
+              debugShowCheckedModeBanner: false,
+            );
+          }
+          return const HomeScreen();
+        });
   }
 }

@@ -113,14 +113,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.13"
-  easy_container:
-    dependency: "direct main"
-    description:
-      name: easy_container
-      sha256: b3264401acca9c6a512e4221169b619320e489451bae2213832aee68fb741196
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4+1"
   email_validator:
     dependency: transitive
     description:
@@ -261,10 +253,10 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_ui_auth
-      sha256: "97fc61ac046c105c4292d1170bcc16a76f9f72de0e98afb44547c29ba69078a4"
+      sha256: efb4a77c2784158c1b332594499bd7e1b4c59d5d3bc5d694b5aae6ba5b6e249b
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.3"
+    version: "1.5.0"
   firebase_ui_localizations:
     dependency: transitive
     description:
@@ -274,13 +266,13 @@ packages:
     source: hosted
     version: "1.5.0"
   firebase_ui_oauth:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: firebase_ui_oauth
-      sha256: "4c55c00b92dcebeedd60914833f64a1211e7495725222e5189441c000d8563dd"
+      sha256: "1dfbb637093419809a1451b2550ac57180c91580ba15cad71332b16282785f17"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.3"
+    version: "1.4.4"
   firebase_ui_oauth_facebook:
     dependency: "direct main"
     description:
@@ -364,7 +356,7 @@ packages:
     source: hosted
     version: "2.3.6"
   flutter_svg:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_svg
       sha256: "8c5d68a82add3ca76d792f058b186a0599414f279f00ece4830b9b231b570338"
@@ -454,21 +446,13 @@ packages:
     source: hosted
     version: "4.0.2"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: a3715e3bc90294e971cb7dc063fbf3cd9ee0ebf8604ffeafabd9e6f16abbdbe6
       url: "https://pub.dev"
     source: hosted
     version: "0.18.0"
-  intl_phone_field:
-    dependency: "direct main"
-    description:
-      name: intl_phone_field
-      sha256: "0d2b35d148ed28a454d50797e6c2fb297f0a295feab84641b02d3dd32294b3f3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
   js:
     dependency: transitive
     description:
@@ -589,22 +573,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.0"
-  pin_input_text_field:
-    dependency: "direct main"
-    description:
-      name: pin_input_text_field
-      sha256: "712ac2dbf5098443ce90a2e1e6850654037a471bdfc9333b4e0a15e678642e39"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.5.0"
-  pinput:
-    dependency: "direct main"
-    description:
-      name: pinput
-      sha256: "1773743c188cdd2f8d0398ea708ec72645bb41ac9311755c4f7bb03a4184bdcf"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.31"
   platform:
     dependency: transitive
     description:
@@ -629,14 +597,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.4"
-  progress_state_button:
-    dependency: "direct main"
-    description:
-      name: progress_state_button
-      sha256: "8efbe7978995d3e20f3987022d4851d6615b25d227c17c3eb22f4dfc0c08811e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
   provider:
     dependency: transitive
     description:
@@ -666,14 +626,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  smart_auth:
-    dependency: transitive
-    description:
-      name: smart_auth
-      sha256: "8cfaec55b77d5930ed1666bb7ae70db5bade099bb1422401386853b400962113"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   source_span:
     dependency: transitive
     description:
@@ -746,14 +698,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
-  universal_platform:
-    dependency: transitive
-    description:
-      name: universal_platform
-      sha256: d315be0f6641898b280ffa34e2ddb14f3d12b1a37882557869646e0cc363d0cc
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0+1"
   vector_graphics:
     dependency: transitive
     description:
@@ -812,4 +756,4 @@ packages:
     version: "6.3.0"
 sdks:
   dart: ">=3.0.0 <4.0.0"
-  flutter: ">=3.7.0"
+  flutter: ">=3.7.0-0"

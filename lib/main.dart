@@ -26,8 +26,8 @@ Future<void> main() async {
     PhoneAuthProvider(),
   ]);
 
-  runApp(const ProviderScope(child: 
-    MyApp(),
+  runApp(const ProviderScope(
+    child: MyApp(),
   ));
 }
 

@@ -40,7 +40,7 @@ class HomeScreen extends ConsumerWidget {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const ProfileScreen(),
+                    builder: (context) => const UserProfileScreen(),
                   ),
                 );
               },
@@ -50,7 +50,7 @@ class HomeScreen extends ConsumerWidget {
         ),
         body: productData.when(
             data: (data) {
-             return Column(
+              return Column(
                 children: [
                   SizedBox(
                     height: 60,
@@ -154,8 +154,8 @@ class HomeScreen extends ConsumerWidget {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.only(
+                                const ClipRRect(
+                                  borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(16),
                                     bottomLeft: Radius.circular(16),
                                   ),
@@ -188,7 +188,6 @@ class HomeScreen extends ConsumerWidget {
                                             ),
                                             Text(
                                               formattedate(product.startDate),
-                                      
                                               style: kSmallTextStyle,
                                             ),
                                           ],
@@ -226,7 +225,6 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ],
               );
-              
             },
             error: (error, stackTrace) => Center(child: Text(error.toString())),
             loading: () => const Center(

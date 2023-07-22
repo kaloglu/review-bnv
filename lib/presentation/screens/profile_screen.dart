@@ -1,3 +1,6 @@
+import 'package:cihan_app/presentation/screens/enroll_history_screen.dart';
+import 'package:cihan_app/presentation/screens/ticket_history_screen.dart';
+import 'package:cihan_app/presentation/screens/winner_history_screen.dart';
 import 'package:cihan_app/presentation/utils/icon_buttons.dart';
 import 'package:cihan_app/presentation/utils/spacing.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -7,8 +10,8 @@ import '../../constants/app_colors.dart';
 import '../../constants/text_styles.dart';
 import '../utils/container_counter.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class UserProfileScreen extends StatelessWidget {
+  const UserProfileScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,17 +91,38 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
-          const Row(
+          Row(
             children: <Widget>[
               CounterWithContainerIcon(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const TicketHistory(),
+                    ),
+                  );
+                },
                 imagePath: 'assets/images/ticket1.png',
                 count: '12',
               ),
               CounterWithContainerIcon(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const EnrollHistory(),
+                    ),
+                  );
+                },
                 imagePath: 'assets/images/person1.png',
                 count: '18',
               ),
               CounterWithContainerIcon(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const WinnerHistory(),
+                    ),
+                  );
+                },
                 imagePath: 'assets/images/trophy1.png',
                 count: '18',
               ),

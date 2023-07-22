@@ -1,6 +1,6 @@
 enum ProductState {
-  StartDate,
-  EndDate,
-  InProgress,
-  Done,
+  startDate,
+  endDate,
+  resultDate,
+  done,
 }

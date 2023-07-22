@@ -5,15 +5,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ProductModel {
   late String category;
   late String description;
-  // late EndDate endDate;
   late String id;
   late String image;
   late ProductInfo productInfo;
   late int requiredTickets;
   late Rules rules;
   late Timestamp startDate;
-   late Timestamp endDate;
-  late Timestamp inProgressDate;
+  late Timestamp endDate;
+
+  late Timestamp resultDate;
   late String title;
 
   ProductModel(
@@ -27,7 +27,7 @@ class ProductModel {
       required this.rules,
       required this.startDate,
       required this.endDate,
-      required this.inProgressDate,
+      required this.resultDate,
       required this.title});
 
   ProductModel.fromJson(Map<String, dynamic> json) {
@@ -42,7 +42,7 @@ class ProductModel {
     title = json['title'];
     startDate = json['startDate'] as Timestamp;
     endDate = json['endDate'] as Timestamp;
-    inProgressDate = json['inProgressDate'] as Timestamp;
+    resultDate = json['resultDate'] as Timestamp;
   }
 
   Map<String, dynamic> toJson() {
@@ -59,7 +59,7 @@ class ProductModel {
     }
     data['startDate'] = startDate;
     data['endDate'] = endDate;
-    data['endDate'] = inProgressDate;
+    data['endDate'] = resultDate;
 
     data['requiredTickets'] = requiredTickets;
     if (rules != null) {

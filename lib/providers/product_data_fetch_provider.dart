@@ -5,7 +5,7 @@ import '../models/product_info_model.dart';
 import '../models/rules_model.dart';
 
 final productInfoImagesStreamProvider =
-    StreamProvider<List<Map<String, dynamic>>>((ref) {
+    StreamProvider.autoDispose<List<Map<String, dynamic>>>((ref) {
   final firestore = FirebaseFirestore.instance;
   final stream =
       firestore.collection('raffles').snapshots().map((querySnapshot) {
@@ -56,7 +56,7 @@ final productsStreamProvider =
         image: data['image'],
         startDate: data['startDate'],
         endDate: data['endDate'],
-        inProgressDate: data['inProgressDate'],
+        resultDate: data['resultDate'],
         requiredTickets: data['requiredTickets'],
         category: data['category'],
         // endDate: data['endDate'],

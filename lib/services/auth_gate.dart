@@ -33,10 +33,10 @@ class AuthGate extends StatelessWidget {
                   border: OutlineInputBorder(),
                 ),
                 elevatedButtonTheme:
-                    ElevatedButtonThemeData(style: buttonStyle),
+                ElevatedButtonThemeData(style: buttonStyle),
                 textButtonTheme: TextButtonThemeData(style: buttonStyle),
                 outlinedButtonTheme:
-                    OutlinedButtonThemeData(style: buttonStyle),
+                OutlinedButtonThemeData(style: buttonStyle),
               ),
               routes: {
                 '/': (context) {
@@ -77,8 +77,13 @@ class AuthGate extends StatelessWidget {
                     ],
                   );
                 },
+                '/profile':(context){
+                  return ProfileScreen(
+                    appBar: AppBar(),
+                  );
+                },
                 '/home': (context) {
-                  return  HomeScreen();
+                  return const HomeScreen();
                 },
                 '/phone': (context) {
                   return PhoneInputScreen(
@@ -100,7 +105,7 @@ class AuthGate extends StatelessWidget {
                 },
                 '/sms': (context) {
                   final arguments = ModalRoute.of(context)?.settings.arguments
-                      as Map<String, dynamic>?;
+                  as Map<String, dynamic>?;
 
                   return SMSCodeInputScreen(
                     actions: [
@@ -116,7 +121,7 @@ class AuthGate extends StatelessWidget {
               debugShowCheckedModeBanner: false,
             );
           }
-          return  HomeScreen();
+          return const HomeScreen();
         });
   }
 }

@@ -33,15 +33,22 @@ dependencies:
   flutter_riverpod: ^2.3.6
   firebase_app_check: ^0.1.4+3
   intl: any
-  shimmer: ^3.0.0
   cached_network_image: ^3.2.3
   flutter_html: ^3.0.0-beta.2
   chips_choice: ^3.0.0
-  anim_search_bar: ^2.0.3
   flutter_timer_countdown: ^1.0.5
   rxdart: ^0.27.7
+  fluttertoast: ^8.2.2
+  modal_progress_hud_nsn: ^0.4.0
   hooks_riverpod: ^2.3.6
-  
+  image_picker: ^1.0.1
+  flutter_image_compress: ^2.0.3
+  path_provider: ^2.0.15
+  firebase_storage: ^11.2.5
+  flutter_typeahead: ^4.6.2
+  firebase_messaging: ^14.6.5
+  flutter_signin_button: ^2.0.0
+
 
 
 dev_dependencies:
@@ -59,9 +66,9 @@ flutter:
     - assets/images/
 
 
-fonts:
-  - family: SocialIcons
-    fonts:
-      - asset: packages/firebase_ui_auth/fonts/SocialIcons.ttf
+  fonts:
+    - family: SocialIcons
+      fonts:
+        - asset: packages/firebase_ui_auth/fonts/SocialIcons.ttf
 
 

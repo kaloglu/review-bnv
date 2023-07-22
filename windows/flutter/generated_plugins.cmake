@@ -4,7 +4,9 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_webview_auth
+  file_selector_windows
   firebase_core
+  modal_progress_hud_nsn
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

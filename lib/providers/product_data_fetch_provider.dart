@@ -59,7 +59,13 @@ final productsStreamProvider =
         resultDate: data['resultDate'],
         requiredTickets: data['requiredTickets'],
         category: data['category'],
-        // endDate: data['endDate'],
+
+
+
+
+
+
+
         productInfo: productInfo,
         rules: rules,
       );

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../constants/text_styles.dart';
 
 class CounterWithContainerIcon extends StatelessWidget {
-  final String count;
+  final Widget count;
   final String imagePath;
   final VoidCallback onTap;
   const CounterWithContainerIcon({
@@ -32,11 +32,11 @@ class CounterWithContainerIcon extends StatelessWidget {
                 color: const Color(0xFF0f1d41),
               ),
               8.pw,
-              Text(
+
                 count,
-                textAlign: TextAlign.center,
-                style: kLargeTextStyle,
-              ),
+                //textAlign: TextAlign.center,
+               // style: kLargeTextStyle,
+
             ],
           ),
         ),

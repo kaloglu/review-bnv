@@ -1,16 +1,25 @@
+import 'package:cihan_app/presentation/screens/edit_profile_screen.dart';
 import 'package:cihan_app/presentation/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/text_styles.dart';
 import '../presentation/utils/auth_decoration.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({Key? key}) : super(key: key);
 
+  Future<bool> isProfileCompleted() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('profileCompleted') ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
     final buttonStyle = ButtonStyle(
       padding: MaterialStateProperty.all(const EdgeInsets.all(12)),
       shape: MaterialStateProperty.all(
@@ -41,8 +50,10 @@ class AuthGate extends StatelessWidget {
               routes: {
                 '/': (context) {
                   return SignInScreen(
+
                     sideBuilder: sideIcon(Icons.account_box_sharp),
                     subtitleBuilder: (context, action) {
+
                       return Padding(
                           padding: const EdgeInsets.only(bottom: 8, left: 7),
                           child: Column(
@@ -77,13 +88,8 @@ class AuthGate extends StatelessWidget {
                     ],
                   );
                 },
-                '/profile':(context){
-                  return ProfileScreen(
-                    appBar: AppBar(),
-                  );
-                },
                 '/home': (context) {
-                  return const HomeScreen();
+                  return  HomeScreen();
                 },
                 '/phone': (context) {
                   return PhoneInputScreen(
@@ -121,7 +127,31 @@ class AuthGate extends StatelessWidget {
               debugShowCheckedModeBanner: false,
             );
           }
-          return const HomeScreen();
-        });
+          // Check if the user has completed their profile
+          return FutureBuilder<bool>(
+            future: isProfileCompleted(),
+            builder: (context, profileSnapshot) {
+              if (profileSnapshot.connectionState == ConnectionState.waiting) {
+                // Loading state while checking profile completion status
+                return Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              } else {
+                bool profileCompleted = profileSnapshot.data ?? false;
+
+                if (profileCompleted) {
+                  // User has completed the profile, navigate to HomeScreen
+                  return HomeScreen();
+                } else {
+                  // User has not completed the profile, show EditProfileScreen
+                  return EditProfileScreen(users: snapshot.data,);
+                }
+              }
+            },
+          );
+        },
+    );
   }
 }

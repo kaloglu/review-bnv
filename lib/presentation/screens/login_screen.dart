@@ -3,7 +3,6 @@ import 'package:cihan_app/constants/text_styles.dart';
 
 import 'package:cihan_app/presentation/screens/home_screen.dart';
 import 'package:cihan_app/presentation/utils/spacing.dart';
-import 'package:cihan_app/services/authent.dart';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';

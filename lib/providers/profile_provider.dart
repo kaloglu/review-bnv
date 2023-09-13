@@ -27,7 +27,7 @@ final profileStreamProvider = StreamProvider.autoDispose<List<ProfileModel>>((re
         fullname: data['fullname'],
         email: data['email'],
         phone: data['phone'],
-        country: data['country'],
+        // country: data['country'],
         city: data['city'],
         address: data['address'],
         profilepic: data['profilepic'],

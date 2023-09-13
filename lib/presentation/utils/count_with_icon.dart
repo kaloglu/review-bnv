@@ -5,7 +5,7 @@ import '../../constants/text_styles.dart';
 
 class CountWithIcon extends StatelessWidget {
   final String iconPath;
-  final String count;
+  final Widget count;
   const CountWithIcon({
     super.key,
     required this.iconPath,
@@ -23,11 +23,9 @@ class CountWithIcon extends StatelessWidget {
           color: const Color(0xFF0f1d41),
         ),
         8.pw,
-        Text(
+
           count,
-          textAlign: TextAlign.center,
-          style: kSmallTextStyle,
-        ),
+
       ],
     );
   }

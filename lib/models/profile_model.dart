@@ -6,7 +6,7 @@ class ProfileModel {
   late String email;
   late String phone;
   late String city;
-  late String country;
+  // late String country;
   late String address;
   late String profilepic;
   late String uid;
@@ -15,7 +15,7 @@ class ProfileModel {
     required this.fullname,
     required this.email,
     required this.phone,
-    required this.country,
+    // required this.country,
     required this.city,
     required this.address,
     required this.profilepic,
@@ -26,7 +26,7 @@ class ProfileModel {
     fullname = json['fullname'] ?? ''; // Provide a default empty string if null
     email = json['email'] ?? ''; // Provide a default empty string if null
     phone = json['phone'] ?? '';
-    country = json['country'] ?? '';// Provide a default empty string if null
+    // country = json['country'] ?? '';// Provide a default empty string if null
     city = json['city'] ?? ''; // Provide a default empty string if null
     address = json['address'] ?? ''; // Provide a default empty string if null
     profilepic = json['profilepic'] ?? ''; // Provide a default empty string if null
@@ -39,7 +39,7 @@ class ProfileModel {
     data['fullname'] = fullname;
     data['email'] = email;
     data['phone'] = phone;
-    data ['country'] = country;
+    // data ['country'] = country;
     data['city'] = city;
     data['address'] = address;
     data['profilepic'] = profilepic;

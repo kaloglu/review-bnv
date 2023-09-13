@@ -9,6 +9,6 @@ class SearchTextNotifier extends StateNotifier<String> {
 }
 
 final searchTextProvider =
-    StateNotifierProvider.autoDispose<SearchTextNotifier, String>((ref) {
+    StateNotifierProvider<SearchTextNotifier, String>((ref) {
   return SearchTextNotifier();
 });

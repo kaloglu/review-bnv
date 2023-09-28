@@ -1,10 +1,7 @@
-import 'package:cihan_app/constants/date_formate_method.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-
 import '../../constants/app_colors.dart';
 import '../../constants/text_styles.dart';
 import '../../providers/ticket_provider.dart';
@@ -18,13 +15,8 @@ class TicketHistory extends ConsumerStatefulWidget {
 
 class _TicketHistoryState extends ConsumerState<TicketHistory> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final ticketdata = ref.watch(ticketStreamProvider);
+    final ticketData = ref.watch(ticketStreamProvider);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -38,7 +30,7 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
           ),
         ),
       ),
-      body: ticketdata.when(
+      body: ticketData.when(
         data: (data) {
           if (data.isEmpty) {
             return Center(
@@ -51,12 +43,13 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
             return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
-                final ticketdata = data[index];
+                final ticketData = data[index];
 
-                if (ticketdata.source == 'Ad Reward Ticket') {
+                if (ticketData.source.contains('Ad Reward Ticket')) {
                   return Card(
                     elevation: 3,
-                    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
                     child: Padding(
                       padding: const EdgeInsets.all(15),
                       child: Column(
@@ -67,15 +60,15 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                ticketdata.source,
+                                ticketData.source,
                                 style: kMediumTextStyle.copyWith(
-                                    fontWeight: FontWeight.w700,fontSize: 12),
+                                    fontWeight: FontWeight.w700, fontSize: 12),
                               ),
                               const SizedBox(height: 5),
                               const Divider(),
 
                               // Text(
-                              //   DateFormat('dd/MM/yy').format(ticketdata.createDate),
+                              //   DateFormat('dd/MM/yy').format(ticketData.createDate),
                               //   style: kMediumTextStyle.copyWith(
                               //       fontWeight: FontWeight.w700),
                               // ),
@@ -87,9 +80,10 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
                                   Text(
                                     'Remain',
                                     style: kMediumTextStyle.copyWith(
-                                        fontWeight: FontWeight.w700,fontSize: 12),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 12),
                                   ),
-                                  Text('${ticketdata.remain.toString()}')
+                                  Text('${ticketData.remain.toString()}')
                                 ],
                               ),
                               const SizedBox(width: 15),
@@ -99,25 +93,28 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
                                 children: [
                                   const Text(
                                     'Earn',
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  Text(ticketdata.earn.toString()),
+                                  Text(ticketData.earn),
                                 ],
                               ),
-
                             ],
                           ),
-
-                          Text(DateFormat('dd/MM/yy').format(ticketdata.createDate),)
-
+                          Text(
+                            DateFormat('dd/MM/yy')
+                                .format(ticketData.createDate),
+                          )
                         ],
                       ),
                     ),
                   );
-                } else if (ticketdata.source.contains('You enroll')) {
+                } else if (ticketData.source.contains('You enrolled')) {
                   return Card(
                     elevation: 3,
-                    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
                     child: Padding(
                       padding: const EdgeInsets.all(15),
                       child: Column(
@@ -128,76 +125,15 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                ticketdata.source,
+                                ticketData.source,
                                 style: kMediumTextStyle.copyWith(
-                                    fontWeight: FontWeight.w700,fontSize: 12),
+                                    fontWeight: FontWeight.w700, fontSize: 12),
                               ),
                               const SizedBox(height: 5),
                               const Divider(),
 
                               // Text(
-                              //   DateFormat('dd/MM/yy').format(ticketdata.createDate),
-                              //   style: kMediumTextStyle.copyWith(
-                              //       fontWeight: FontWeight.w700),
-                              // ),
-                              const SizedBox(width: 62),
-                              const Divider(),
-
-                              Column(
-                                children: [
-                                  Text(
-                                    'Remain',
-                                    style: kMediumTextStyle.copyWith(
-                                        fontWeight: FontWeight.w700,fontSize: 12),
-                                  ),
-                                  Text('${ticketdata.remain.toString()}')
-                                ],
-                              ),
-                              const SizedBox(width: 15),
-                              const Divider(),
-
-                              Column(
-                                children: [
-                                  const Text(
-                                    'Earn',
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(ticketdata.earn.toString()),
-                                ],
-                              ),
-
-                            ],
-                          ),
-
-                          Text(DateFormat('dd/MM/yy').format(ticketdata.createDate),)
-
-                        ],
-                      ),
-                    ),
-                  );
-                }else if (ticketdata.source.contains('Daily Bonus')) {
-                  return Card(
-                    elevation: 3,
-                    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Column(
-                        //mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                ticketdata.source,
-                                style: kMediumTextStyle.copyWith(
-                                    fontWeight: FontWeight.w700,fontSize: 12),
-                              ),
-                              const SizedBox(height: 5),
-                              const Divider(),
-
-                              // Text(
-                              //   DateFormat('dd/MM/yy').format(ticketdata.createDate),
+                              //   DateFormat('dd/MM/yy').format(ticketData.createDate),
                               //   style: kMediumTextStyle.copyWith(
                               //       fontWeight: FontWeight.w700),
                               // ),
@@ -209,36 +145,100 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
                                   Text(
                                     'Remain',
                                     style: kMediumTextStyle.copyWith(
-                                        fontWeight: FontWeight.w700,fontSize: 12),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 12),
                                   ),
-                                  Text('${ticketdata.remain.toString()}')
+                                  Text('${ticketData.remain.toString()}')
                                 ],
                               ),
                               const SizedBox(width: 15),
                               const Divider(),
 
-                               Column(
-                                children: [
-                                  const Text(
-                                    'Earn',
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(ticketdata.earn.toString()),
-                                ],
-                              ),
-
+                              // Column(
+                              //   children: [
+                              //     const Text(
+                              //       'Earn',
+                              //       style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                              //     ),
+                              //     Text(ticketData.earn.toString()),
+                              //   ],
+                              // ),
                             ],
                           ),
-
-                          Text(DateFormat('dd/MM/yy').format(ticketdata.createDate),)
-
+                          Text(
+                            DateFormat('dd/MM/yy')
+                                .format(ticketData.createDate),
+                          )
                         ],
                       ),
                     ),
-                  );}
+                  );
+                } else if (ticketData.source.contains('Daily Bonus')) {
+                  return Card(
+                    elevation: 3,
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        //mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                ticketData.source,
+                                style: kMediumTextStyle.copyWith(
+                                    fontWeight: FontWeight.w700, fontSize: 12),
+                              ),
+                              const SizedBox(height: 5),
+                              const Divider(),
 
+                              // Text(
+                              //   DateFormat('dd/MM/yy').format(ticketData.createDate),
+                              //   style: kMediumTextStyle.copyWith(
+                              //       fontWeight: FontWeight.w700),
+                              // ),
+                              const SizedBox(width: 125),
+                              const Divider(),
 
-                else {
+                              Column(
+                                children: [
+                                  Text(
+                                    'Remain',
+                                    style: kMediumTextStyle.copyWith(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 12),
+                                  ),
+                                  Text(ticketData.remain.toString())
+                                ],
+                              ),
+                              const SizedBox(width: 15),
+                              const Divider(),
+
+                              Column(
+                                children: [
+                                  const Text(
+                                    'Earn',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(ticketData.earn.toString()),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Text(
+                            DateFormat('dd/MM/yy')
+                                .format(ticketData.createDate),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                } else {
                   return const SizedBox(); // Return an empty SizedBox if source doesn't match any condition
                 }
               },

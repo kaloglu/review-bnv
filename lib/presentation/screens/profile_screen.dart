@@ -58,6 +58,7 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
 
     FlutterBranchSdk.initSession().listen((data) async {
       print('Dynamic link data received: $data');
+      controllerData.sink.add((data.toString()));
 
       if (data.containsKey('+clicked_branch_link') &&
           data['+clicked_branch_link'] == true) {
@@ -454,7 +455,7 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
 
     initDeepLinkData();
     listenDynamicLinks();
-    //_createRewardedAd();
+    _createRewardedAd();
 
 
     FlutterBranchSdk.setIdentity('branch_user_test');
@@ -614,7 +615,7 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
           if (data.isEmpty) {
             return Center(
               child: Text(
-                ' Please complete your profile to see your\n                             tickets',
+                'No Data Found',
                 style: kMediumTextStyle.copyWith(fontWeight: FontWeight.w700),
               ),
             );
@@ -696,11 +697,11 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
                     ),
                     CounterWithContainerIcon(
                       onTap: () {
-                        // Navigator.of(context).push(
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const EnrollHistory(),
-                        //   ),
-                        // );
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const EnrollHistory(),
+                          ),
+                        );
                       },
                       imagePath: 'assets/images/person1.png',
                       count: enrollData.when(

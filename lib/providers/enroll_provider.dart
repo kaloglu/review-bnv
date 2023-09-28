@@ -4,15 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/enroll_model.dart';
 
-final enrollStreamProvider = StreamProvider.autoDispose<List<EnrollModel>>((ref) {
+final enrollStreamProvider =
+    StreamProvider.autoDispose<List<EnrollModel>>((ref) {
   User? user = FirebaseAuth.instance.currentUser;
 
   if (user == null) {
     return Stream.value([]);
   }
 
-  final firebasefirestore =
-  FirebaseFirestore.instance.collection('users').doc(user.uid).collection('enroll');
+  final firebasefirestore = FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .collection('enroll');
 
   return firebasefirestore.snapshots().map((snapshot) {
     final ticketList = snapshot.docs.map((doc) {
@@ -24,10 +27,12 @@ final enrollStreamProvider = StreamProvider.autoDispose<List<EnrollModel>>((ref)
         ticketid: data['ticketid'],
         raffleid: data['raffleid'],
         uid: doc.id,
+        title: data['title'],
+        description: data['description'],
+        enrollmentCount: data['enrollmentCount'],
+        image: data['image'],
       );
     }).toList();
-
-
 
     return ticketList;
   });

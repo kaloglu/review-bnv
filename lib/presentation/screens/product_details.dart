@@ -7,6 +7,7 @@ import 'package:cihan_app/services/firebase_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +21,7 @@ import '../../providers/ticket_provider.dart';
 import '../utils/count_with_icon.dart';
 import '../utils/reusable_small_btn.dart';
 import 'home_screen.dart';
+
 class ProductDetails extends ConsumerStatefulWidget {
   ProductDetails({
     Key? key,
@@ -52,19 +54,19 @@ class ProductDetails extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<ProductDetails> createState() => ProductDetailsState(
-    title: title,
-    description: description,
-    requiredTickets: requiredTickets,
-    attendeeCount: attendeeCount.toString(),
-    statusColor: statusColor,
-    images: images,
-    documentId: documentId,
-    status: status,
-    name: name,
-    count: count,
-    unit: unit,
-    unitPrice: unitPrice,
-  );
+        title: title,
+        description: description,
+        requiredTickets: requiredTickets,
+        attendeeCount: attendeeCount.toString(),
+        statusColor: statusColor,
+        images: images,
+        documentId: documentId,
+        status: status,
+        name: name,
+        count: count,
+        unit: unit,
+        unitPrice: unitPrice,
+      );
 }
 
 class ProductDetailsState extends ConsumerState<ProductDetails> {
@@ -101,9 +103,6 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
   final String unit;
   final double unitPrice;
 
-
-
-
   late final StreamController<bool> _buttonEnabledController;
   DateTime? startDate;
   DateTime? endDate;
@@ -120,12 +119,16 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (RewardedAd ad) {
-          print('$ad loaded.');
+          if (kDebugMode) {
+            print('$ad loaded.');
+          }
           _rewardedAd = ad;
           _numRewardedLoadAttempts = 0;
         },
         onAdFailedToLoad: (LoadAdError error) {
-          print('RewardedAd failed to load: $error');
+          if (kDebugMode) {
+            print('RewardedAd failed to load: $error');
+          }
           _rewardedAd = null;
           _numRewardedLoadAttempts += 1;
           if (_numRewardedLoadAttempts < 5) {
@@ -156,13 +159,32 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
     super.dispose();
   }
 
+  void scheduleEndDateCallback(DateTime endDate, String documentId) {
+    final currentTime = DateTime.now();
+    final timeDifference = endDate.difference(currentTime);
+
+    if (timeDifference.isNegative) {
+      // End date has already passed
+      return;
+    }
+
+    Future.delayed(timeDifference, () {
+      // Call the performLuckyDraw function when the end date is reached
+      LuckyDraw().performLuckyDraw(documentId);
+    });
+  }
+
   void _fetchStartAndEndDates() async {
     final productDocRef =
-    FirebaseFirestore.instance.collection('raffles').doc(documentId);
+        FirebaseFirestore.instance.collection('raffles').doc(documentId);
     final productSnapshot = await productDocRef.get();
-    final productData = productSnapshot.data() as Map<String, dynamic>?;
+    final productData = productSnapshot.data();
     startDate = productData?['startDate']?.toDate() as DateTime?;
     endDate = productData?['endDate']?.toDate() as DateTime?;
+    if (endDate != null) {
+      // Schedule the callback for this product's endDate
+      scheduleEndDateCallback(endDate!, documentId);
+    }
     _updateTimerStatus();
   }
 
@@ -219,43 +241,33 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
         int remainingPoints = userTicketsData != null
             ? (userTicketsData['remain'] as int) + newTicketCount
             : newTicketCount;
-        int remainingPoint = userTicketsData != null
-            ? (userTicketsData['earn'] as int) + newTicketCount
-            : newTicketCount;
+        // int remainingPoint = userTicketsData != null
+        //     ? (userTicketsData['earn'] as int) + newTicketCount
+        //     : newTicketCount;
 // Create a timestamp-based document ID
-        final newTicketDocId = DateTime
-            .now()
-            .millisecondsSinceEpoch
-            .toString();
-
+        final newTicketDocId = DateTime.now().millisecondsSinceEpoch.toString();
+        // Get the current date (without the time component)
+        final currentDate = DateTime.now();
+        // final currentDateWithoutTime = DateTime(currentDate.year, currentDate.month, currentDate.day);
 // Create a new document with the timestamp-based ID in the 'tickets' subcollection
         final newTicketDocRef = ticketCollectionRef.doc(newTicketDocId);
         await newTicketDocRef.set({
-          'earn': remainingPoint,
+          'earn': '10',
           'createDate': FieldValue.serverTimestamp(),
           'source': 'Ad Reward Ticket',
           'remain': remainingPoints,
+          'expiryDate': DateTime(
+              currentDate.year, currentDate.month, currentDate.day + 1),
         });
 
-        // // Create a new document with a unique ID in the 'tickets' subcollection
-        // final newTicketDocRef = ticketCollectionRef.doc();
-        // await newTicketDocRef.set({
-        //   'earn': newTicketCount.toString(),
-        //   'createDate': DateTime.now(),
-        //   'source': 'Rewarded Video Ticket',
-        //   'remain': remainingPoints,
-        // });
-
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("You Earned $newTicketCount Ticket(s)")),
+          SnackBar(content: Text("You Earned $newTicketCount Tickets")),
         );
       } catch (e) {
         debugPrint('Error updating Firestore: $e');
       }
     }
   }
-
-
 
   void _showRewardedAd() {
     if (_rewardedAd == null) {
@@ -317,7 +329,6 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
     return endDate != null && now.isAfter(endDate!);
   }
 
-
   @override
   Widget build(BuildContext context) {
     final productInfoImages = ref.watch(productInfoImagesStreamProvider);
@@ -345,10 +356,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(top: 10),
         height: 120,
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
+        width: MediaQuery.of(context).size.width,
         color: const Color(0XFFFFFFFF),
         child: Column(
           children: [
@@ -373,11 +381,10 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                           style: ButtonStyle(
                             textStyle: MaterialStateProperty.all(
                                 const TextStyle(
-                                    fontSize:
-                                    16)), // Use your kMediumTextStyle
+                                    fontSize: 16)), // Use your kMediumTextStyle
                             backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                                  (states) {
+                                MaterialStateProperty.resolveWith<Color>(
+                              (states) {
                                 if (states.contains(MaterialState.disabled)) {
                                   return Colors
                                       .grey; // Set the background color when button is disabled
@@ -387,8 +394,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                               },
                             ),
                           ),
-                          onPressed:  isEnabled ? _enrollUser : null,
-
+                          onPressed: isEnabled ? _enrollUser : null,
                           child: const Text(
                             'Enroll',
                             style: TextStyle(color: Colors.black),
@@ -406,18 +412,18 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                         child: ElevatedButton(
                           style: ButtonStyle(
                               textStyle:
-                              MaterialStatePropertyAll(kMediumTextStyle),
+                                  MaterialStatePropertyAll(kMediumTextStyle),
                               backgroundColor: const MaterialStatePropertyAll(
                                   Color(0XFF87ceeb))),
-                          onPressed:(){
+                          onPressed: () {
                             _adLoading ? null : _showRewardedAd();
-                          } ,
+                          },
                           child: _adLoading
                               ? const CircularProgressIndicator()
                               : const Text(
-                            'Earn',
-                            style: TextStyle(color: Colors.black),
-                          ),
+                                  'Earn',
+                                  style: TextStyle(color: Colors.black),
+                                ),
                         ),
                       )
                     ],
@@ -432,14 +438,11 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
           children: [
             SizedBox(
               height: 300,
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
+              width: MediaQuery.of(context).size.width,
               child: productInfoImages.when(
                 data: (imagesData) {
                   final images = imagesData.firstWhere(
-                        (data) => data['id'] == documentId,
+                    (data) => data['id'] == documentId,
                   )['images'];
                   return Swiper(
                     autoplay: true,
@@ -447,10 +450,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                       final imagePath = images[index]['path'] as String;
 
                       return Container(
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
+                        width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
                           borderRadius: const BorderRadius.only(
                             bottomLeft: Radius.circular(16),
@@ -472,12 +472,10 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                     ),
                   );
                 },
-                error: (error, stackTrace) =>
-                    Center(
-                      child: Text(error.toString()),
-                    ),
-                loading: () =>
-                const Center(
+                error: (error, stackTrace) => Center(
+                  child: Text(error.toString()),
+                ),
+                loading: () => const Center(
                   child: CircularProgressIndicator(),
                 ),
               ),
@@ -501,7 +499,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                         ],
                       ),
                       Text(
-                       widget.status,
+                        widget.status,
                         style: TextStyle(
                           color: statusColor,
                           fontWeight: FontWeight.bold,
@@ -555,6 +553,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
   }
 
 
+
   void _enrollUser() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -562,7 +561,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
       final productDocRef = firestore.collection('raffles').doc(documentId);
       final attendeeCollectionRef = productDocRef.collection('attendees');
       final userTicketsCollectionRef =
-      firestore.collection('users').doc(user.uid).collection('tickets');
+          firestore.collection('users').doc(user.uid).collection('tickets');
 
       try {
         final userEnrollmentQuerySnapshot = await attendeeCollectionRef
@@ -574,7 +573,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
         final productData = productSnapshot.data();
         final requiredTickets = productData?['requiredTickets'] as int;
         final maxAttendedByUser =
-        productData?['rules']?['maxAttendByUser'] as int;
+            productData?['rules']?['maxAttendByUser'] as int;
         final maxAttendee = productData?['rules']?['maxAttendee'] as int;
 
         final userTicketsSnapshot = await userTicketsCollectionRef
@@ -599,13 +598,34 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
           return;
         }
 
-        // Filter valid tickets
-        final validTickets = userTicketsSnapshot.docs.where((ticketDoc) {
-          final ticketData = ticketDoc.data();
-          final expirationDate = ticketData['expirationDate'] as Timestamp?;
-          final remain = ticketData['remain'] as int;
-          return (expirationDate == null || expirationDate.toDate().isAfter(DateTime.now())) &&
-              remain >= requiredTickets;
+        // Filter valid tickets based on expiryDate
+        final validExpiryTicketsQuery = FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('tickets')
+            .where('expiryDate',
+                isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime.now()));
+
+        final validExpiryTicketsSnapshot = await validExpiryTicketsQuery.get();
+
+        // Filter valid tickets based on remain
+        final validRemainTicketsQuery = FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('tickets')
+            .where('remain', isGreaterThanOrEqualTo: 1);
+
+        final validRemainTicketsSnapshot = await validRemainTicketsQuery.get();
+
+        // Combine the results of both queries
+        final validExpiryTickets = validExpiryTicketsSnapshot.docs.toList();
+        final validRemainTickets = validRemainTicketsSnapshot.docs.toList();
+
+        // Find the intersection of validExpiryTickets and validRemainTickets
+        final validTickets = validExpiryTickets.where((expiryTicket) {
+          final expiryTicketId = expiryTicket.id;
+          return validRemainTickets
+              .any((remainTicket) => remainTicket.id == expiryTicketId);
         }).toList();
 
         // Calculate the total number of valid tickets
@@ -633,49 +653,88 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
           // Query for the current attendee count to assign sequential numbers
           final attendeeCountSnapshot = await attendeeCollectionRef.get();
           final attendeeCount = attendeeCountSnapshot.docs.length;
+          String? deviceToken = await FirebaseMessaging.instance.getToken();
+
+          // Create a new document in the "attendee" collection
           final attendeeData = {
             'userId': user.uid,
             'createDate': FieldValue.serverTimestamp(),
             'productId': documentId,
             'number': attendeeCount,
+            'deviceToken': deviceToken,
           };
 
-          // Create a new document in the "attendee" collection
-          await attendeeCollectionRef.add(attendeeData);
+          final attendeeRef = await attendeeCollectionRef.add(attendeeData);
 
           // Get the document ID of the ticket and use it as ticketid
           final ticketId = validTickets.first.id;
 
-          // Create a new subcollection "enroll" in the user's document
-          final userEnrollCollectionRef =
-          firestore.collection('users').doc(user.uid).collection('enroll');
-          final enrollData = {
-            'ticketid': ticketId,
-            'raffleid': documentId,
-            'enrollDate': FieldValue.serverTimestamp(),
-          };
+          final productTitle = productData?['title'] ?? '';
+          final productDescription = productData?['description'] ?? '';
+          final productImage = productData?['image'] ?? '';
 
-          // Use the document ID as the timestamp for the new enrollment document
-          final newEnrollDocRef = userEnrollCollectionRef.doc(ticketId);
-          await newEnrollDocRef.set(enrollData);
-          final productTitle =
-              productData?['title'] ?? ''; // Fetch the title of the product
-          int remainingPoint = validTickets
-              .map((ticket) => ticket['earn'] as int)
-              .reduce((a, b) => a + b);
+          // Query for an existing enrollment document for the user in this product
+          final existingEnrollmentQuerySnapshot = await firestore
+              .collection('users')
+              .doc(user.uid)
+              .collection('enroll')
+              .where('raffleid', isEqualTo: documentId)
+              .get();
+
+          if (existingEnrollmentQuerySnapshot.docs.isNotEmpty) {
+            // User already enrolled in this product, update the existing document
+            final existingEnrollmentDoc =
+                existingEnrollmentQuerySnapshot.docs.first;
+            final existingEnrollmentData =
+                existingEnrollmentDoc.data();
+
+            // Increment the enrollment count
+            final int currentEnrollmentCount =
+                existingEnrollmentData['enrollmentCount'] ?? 0;
+            final int newEnrollmentCount = currentEnrollmentCount + 1;
+
+            // Update the existing document with the new enrollment count
+            await existingEnrollmentDoc.reference.update({
+              'enrollmentCount': newEnrollmentCount,
+            });
+          } else {
+            // User is enrolling for the first time in this product
+            final enrollData = {
+              'ticketid': ticketId,
+              'raffleid': documentId,
+              'enrollDate': FieldValue.serverTimestamp(),
+              'title': productTitle,
+              'description': productDescription,
+              'image': productImage,
+              'enrollmentCount': 0, // Initial enrollment count is 1
+            };
+
+            // Create a new document in the "enroll" collection
+            await firestore
+                .collection('users')
+                .doc(user.uid)
+                .collection('enroll')
+                .add(enrollData);
+          }
 
           // Create a timestamp-based document ID
           final newTicketDocId =
-          DateTime.now().millisecondsSinceEpoch.toString();
+              DateTime.now().millisecondsSinceEpoch.toString();
+
+          // Get the current date (without the time component)
+          final currentDate = DateTime.now();
 
           // Create a new document in the user's "tickets" collection with the enrollment data
           final newUserTicketDocRef =
-          userTicketsCollectionRef.doc(newTicketDocId);
+              userTicketsCollectionRef.doc(newTicketDocId);
+
           await newUserTicketDocRef.set({
-            'earn': remainingPoint,
             'createDate': FieldValue.serverTimestamp(),
-            'source': 'You enroll for  $productTitle',
+            'earn': '0',
+            'source': 'You enrolled',
             'remain': newRemainingTickets,
+            'expiryDate': DateTime(
+                currentDate.year, currentDate.month, currentDate.day + 1),
           });
 
           ScaffoldMessenger.of(context).showSnackBar(
@@ -683,221 +742,24 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Not enough valid tickets to enroll")),
+            const SnackBar(content: Text("Not enough tickets to enroll")),
           );
         }
       } catch (e) {
-        print('Error: $e');
+        if (kDebugMode) {
+          print('Error: $e');
+        }
       }
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// void _enrollUser() async {
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   if (user != null) {
-  //     final firestore = FirebaseFirestore.instance;
-  //     final productDocRef = firestore.collection('raffles').doc(documentId);
-  //     final attendeeCollectionRef = productDocRef.collection('attendees');
-  //     final userTicketsCollectionRef =
-  //     firestore.collection('users').doc(user.uid).collection('tickets');
-  //
-  //     try {
-  //       final userEnrollmentQuerySnapshot = await attendeeCollectionRef
-  //           .where('userId', isEqualTo: user.uid)
-  //           .get();
-  //       final userEnrollmentCount = userEnrollmentQuerySnapshot.docs.length;
-  //
-  //       final productSnapshot = await productDocRef.get();
-  //       final productData = productSnapshot.data();
-  //       final requiredTickets = productData?['requiredTickets'] as int;
-  //       final maxAttendedByUser =
-  //       productData?['rules']?['maxAttendByUser'] as int;
-  //       final maxAttendee = productData?['rules']?['maxAttendee'] as int;
-  //
-  //       final userTicketsSnapshot = await userTicketsCollectionRef
-  //           .orderBy('createDate', descending: true)
-  //           .get();
-  //       final userTicketsData = userTicketsSnapshot.docs.isNotEmpty
-  //           ? userTicketsSnapshot.docs.first.data()
-  //           : null;
-  //
-  //       if (userTicketsData == null || userTicketsData['remain'] < requiredTickets) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           const SnackBar(content: Text("Not enough tickets")),
-  //         );
-  //         return;
-  //       }
-  //
-  //       if (userEnrollmentCount >= maxAttendedByUser || userEnrollmentCount >= maxAttendee) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           const SnackBar(content: Text("Exceeded enrollment limit")),
-  //         );
-  //         return;
-  //       }
-  //
-  //       // Check for a valid daily bonus ticket
-  //       final userTicketsQuerySnapshot = await userTicketsCollectionRef
-  //           .where('source', isEqualTo: 'Daily Bonus')
-  //           .where('expirationDate', isGreaterThanOrEqualTo: Timestamp.now())
-  //           .get();
-  //
-  //
-  //       if (userTicketsQuerySnapshot.docs.isEmpty) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           const SnackBar(content: Text("No valid daily bonus ticket")),
-  //         );
-  //         return;
-  //       }
-  //
-  //       // Proceed with enrollment
-  //       final remainTickets = userTicketsData['remain'] as int;
-  //
-  //       // Query for the current attendee count to assign sequential numbers
-  //       final attendeeCountSnapshot = await attendeeCollectionRef.get();
-  //       final attendeeCount = attendeeCountSnapshot.docs.length;
-  //       final attendeeData = {
-  //         'userId': user.uid,
-  //         'createDate': FieldValue.serverTimestamp(),
-  //         'productId': documentId,
-  //         'number': attendeeCount,
-  //       };
-  //
-  //       // Create a new document in the "attendee" collection
-  //       final newAttendeeDocRef = await attendeeCollectionRef.add(attendeeData);
-  //
-  //       // Deduct requiredTickets from user's remaining tickets
-  //       // await userTicketsCollectionRef
-  //       //     .doc(userTicketsSnapshot.docs.first.id)
-  //       //     .update({'remain': remainTickets - requiredTickets});
-  //
-  //       // Get the document ID of the ticket and use it as ticketid
-  //       final ticketDocRef = await firestore
-  //           .collection('users')
-  //           .doc(user.uid)
-  //           .collection('tickets')
-  //           .doc(userTicketsSnapshot.docs.first.id);
-  //       final ticketDoc = await ticketDocRef.get();
-  //       final ticketId = ticketDoc.id;
-  //
-  //       // Create a new subcollection "enroll" in the user's document
-  //       final userEnrollCollectionRef =
-  //       firestore.collection('users').doc(user.uid).collection('enroll');
-  //       final enrollData = {
-  //         'ticketid': ticketId,
-  //         'raffleid': documentId,
-  //         'enrollDate': FieldValue.serverTimestamp(),
-  //       };
-  //
-  //       // Use the document ID as the timestamp for the new enrollment document
-  //       final newEnrollDocRef = userEnrollCollectionRef.doc(ticketId);
-  //       await newEnrollDocRef.set(enrollData);
-  //       final productTitle =
-  //           productData?['title'] ?? ''; // Fetch the title of the product
-  //       int remainingPoint = userTicketsData != null
-  //           ? (userTicketsData['earn'] as int) + newTicketCount
-  //           : newTicketCount;
-  //
-  //       // Create a timestamp-based document ID
-  //       final newTicketDocId =
-  //       DateTime.now().millisecondsSinceEpoch.toString();
-  //
-  //       // Create a new document in the user's "tickets" collection with the enrollment data
-  //       final newUserTicketDocRef =
-  //       userTicketsCollectionRef.doc(newTicketDocId);
-  //       await newUserTicketDocRef.set({
-  //         'earn': remainingPoint,
-  //         'createDate': FieldValue.serverTimestamp(),
-  //         'source': 'You enroll for  $productTitle',
-  //         'remain': remainTickets - requiredTickets,
-  //       });
-  //
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(content: Text("Enrolled successfully")),
-  //       );
-  //     } catch (e) {
-  //       print('Error: $e');
-  //     }
-  //   }
-  // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class RaffleService {
-// Initialize FirebaseMessaging
-
+class LuckyDraw {
   Future<void> performLuckyDraw(String raffleId) async {
     try {
       // Reference to the raffle document and its attendees subcollection.
       final raffleDocument =
-      FirebaseFirestore.instance.collection('raffles').doc(raffleId);
+          FirebaseFirestore.instance.collection('raffles').doc(raffleId);
       final attendeesCollection = raffleDocument.collection('attendees');
 
       // Get all the documents in the attendees collection.
@@ -907,43 +769,73 @@ class RaffleService {
       final List<QueryDocumentSnapshot> attendeesDocs = attendeesSnapshot.docs;
       attendeesDocs.shuffle();
 
-      // Check which document is at position 3 after shuffling.
-      if (attendeesDocs.length >= 3) {
-        final luckyWinner = attendeesDocs[2];
-        final luckyWinnerData = luckyWinner.data() as Map<String, dynamic>;
-        print('Lucky winner details: $luckyWinnerData');
+      // Check if there are attendees.
+      if (attendeesDocs.isNotEmpty) {
+        // Check which document is at position 3 after shuffling.
+        if (attendeesDocs.length >= 3) {
+          final luckyWinner = attendeesDocs[2];
+          final luckyWinnerData = luckyWinner.data();
 
-        // Create a subcollection "winners" and add a document for the winner.
-        final winnersCollection = raffleDocument.collection('winners');
+          // Ensure luckyWinnerData is not null before sending notifications.
+          if (luckyWinnerData != null) {
+            // Check the type of luckyWinnerData before accessing the userId and productId properties.
+            if (luckyWinnerData is Map<String, dynamic>) {
+              final deviceToken = luckyWinnerData['deviceToken'];
+              final productId = luckyWinnerData['productId'];
+              if (kDebugMode) {
+                print('Lucky winner details: $luckyWinnerData');
+              }
 
-        // Check if luckyWinnerData is not null before accessing fields.
-        if (luckyWinnerData != null) {
-          final userId = luckyWinnerData['userId'];
-          final productId = luckyWinnerData['productId'];
-          await winnersCollection.add({
-            'userId': userId,
-            'productId': raffleId,
-          });
-          // Send a push notification to the lucky winner using Firebase Cloud Messaging (FCM).
-          try {
-            await FirebaseMessaging.instance.sendMessage(
-             to: userId,
-              messageId: 'You won this product',
-            );
-          } catch (error) {
-            print('Notification Error: $error');
+              // Create a subcollection "winners" and add a document for the winner.
+              final winnersCollection = raffleDocument.collection('winners');
+
+              // Check if userId is not null before sending notifications.
+              if (deviceToken != null) {
+                await winnersCollection.add({
+                  'deviceToken': deviceToken,
+                  'productId': raffleId,
+                });
+
+                // Send a push notification to the lucky winner using Firebase Cloud Messaging (FCM).
+                try {
+                  await FirebaseMessaging.instance.sendMessage(
+                    to: deviceToken,
+                    messageId: 'You won this product',
+                  );
+                } catch (error) {
+                  if (kDebugMode) {
+                    print('Notification Error: $error');
+                  }
+                }
+              } else {
+                if (kDebugMode) {
+                  print('Lucky winner userId is null.');
+                }
+              }
+            } else {
+              if (kDebugMode) {
+                print('Lucky winner data is not in the expected format.');
+              }
+            }
+          } else {
+            if (kDebugMode) {
+              print('Lucky winner data is null.');
+            }
           }
         } else {
-          print('Not enough attendees to determine a lucky winner.');
+          if (kDebugMode) {
+            print('Not enough attendees to determine a lucky winner.');
+          }
+        }
+      } else {
+        if (kDebugMode) {
+          print('No attendees found.');
         }
       }
-    }catch(error){
-      print('Erro in creating documents: $error ');
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error in creating documents: $error ');
+      }
     }
-
-    // Function to send a push notification using FCM
-
   }
-
-
 }

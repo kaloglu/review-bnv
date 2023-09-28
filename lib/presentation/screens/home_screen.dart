@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:workmanager/workmanager.dart';
 import '../../constants/chips_data.dart';
 import '../../constants/enum_for_date.dart';
 import '../../main.dart';
@@ -28,7 +27,6 @@ final selectedCategoryProvider =
   (ref) => SelectedCategoryNotifier(),
 );
 
-
 // Create a StreamController for the status
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -41,13 +39,12 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class HomeScreenState extends ConsumerState<HomeScreen> {
-
-@override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
+
   @override
   Widget build(BuildContext context) {
     debugPrint('HIIIIIIIIIIIIIIIIIIIIIIIII');
@@ -55,7 +52,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     final attendeesData = ref.watch(attendeesStreamProvider);
     final selectedCategory = ref.watch(selectedCategoryProvider);
     String? selectedChipLabel = ref.watch(selectedCategoryProvider);
-
 
     // Filter products based on the selected category and search query
 
@@ -101,7 +97,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       body: productData.when(
         data: (data) {
-
           final searchQuery = ref.watch(searchTextProvider);
           // Filter products based on the selected category and search query
           final filteredProducts = productData.when(
@@ -117,7 +112,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
             loading: () => [],
             error: (error, stackTrace) => [],
           );
-
 
           // final filteredProducts = data
           //     .where(
@@ -180,7 +174,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                       String statusText;
                       Color statusColor;
 
-
                       if (currentState == ProductState.resultDate) {
                         statusText = 'InProgress';
                         statusColor = Colors.green;
@@ -223,21 +216,20 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => ProductDetails(
-                                  name: product.productInfo.name,
-                                  count: product.productInfo.count,
-                                  unit: product.productInfo.unit,
-                                  unitPrice: product.productInfo.unitPrice,
-                                  attendeeCount: totalAttendeesCount,
-                                  requiredTickets:
-                                      product.requiredTickets.toString(),
-                                  documentId: product.id,
-                                  images: product.productInfo.images,
-                                  statusColor: statusColor,
-                                  description: product.description,
-                                  title: product.title,
-                                  status: statusText,
-
-                               ),
+                                name: product.productInfo.name,
+                                count: product.productInfo.count,
+                                unit: product.productInfo.unit,
+                                unitPrice: product.productInfo.unitPrice,
+                                attendeeCount: totalAttendeesCount,
+                                requiredTickets:
+                                    product.requiredTickets.toString(),
+                                documentId: product.id,
+                                images: product.productInfo.images,
+                                statusColor: statusColor,
+                                description: product.description,
+                                title: product.title,
+                                status: statusText,
+                              ),
                             ),
                           );
                         },
@@ -265,7 +257,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                                   topLeft: Radius.circular(16),
                                   bottomLeft: Radius.circular(16),
                                 ),
-
                                 child: Image.network(
                                   product.productInfo.images[0].path,
                                   fit: BoxFit.fill,
@@ -393,11 +384,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 }
-
-
-
-
-
 
 class SelectedCategoryNotifier extends StateNotifier<String?> {
   SelectedCategoryNotifier() : super(null);

@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none' 
 
-version: 1.4.2
+version: 1.4.3
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -50,9 +50,7 @@ dependencies:
   google_mobile_ads: ^3.0.0
   shared_preferences: ^2.2.0
   share_plus: ^7.1.0
-  firebase_dynamic_links: ^5.3.4
   flutter_branch_sdk: ^6.7.0
-  workmanager: ^0.5.1
 
 
 

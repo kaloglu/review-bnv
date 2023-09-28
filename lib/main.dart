@@ -104,22 +104,22 @@ Future<void> checkAndGrantDailyTicket(int newTicketCount) async {
         ? userTicketsSnapshot.docs.first.data()
         : null;
 
-    // Calculate the remaining points based on existing tickets and new earned tickets
+    //Calculate the remaining points based on existing tickets and new earned tickets
     int remainingPoints = userTicketsData != null
         ? (userTicketsData['remain'] as int) + newTicketCount
         : newTicketCount;
-    int remainingPoint = userTicketsData != null
-        ? (userTicketsData['earn'] as int) + newTicketCount
-        : newTicketCount;
+    // int remainingPoint = userTicketsData != null
+    //     ? (userTicketsData['earn'] as int) + newTicketCount
+    //     : newTicketCount;
 
     if (existingTicketQuery.docs.isEmpty) {
       // User hasn't received a ticket for the current day, so create a new ticket
       final newTicketData = {
         'source': 'Daily Bonus', // Replace with your source information
-        'earn': remainingPoint, // Replace with the appropriate value for earnings
+        'earn': '11', // Replace with the appropriate value for earnings
         'remain': remainingPoints, // Initial remain value (adjust as needed)
         'createDate': FieldValue.serverTimestamp(),
-        'expirationDate': DateTime(currentDate.year, currentDate.month, currentDate.day + 1), // Expiration at 00:00 of the next day
+        'expiryDate': DateTime(currentDate.year, currentDate.month, currentDate.day + 1), // Expiration at 00:00 of the next day
       };
 
       await ticketsCollectionRef.add(newTicketData);

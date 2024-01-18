@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../constants/text_styles.dart';
+import '../constants/text_styles.dart';
+
 
 class ProfileTextFields extends StatelessWidget {
    ProfileTextFields({
@@ -11,6 +12,7 @@ class ProfileTextFields extends StatelessWidget {
     required this.labelText,
       this.isEnabled,
      required this.readonly,
+     this.keyboardType,
   });
 
   final TextEditingController controller;
@@ -18,12 +20,14 @@ class ProfileTextFields extends StatelessWidget {
   final String labelText;
     bool? isEnabled;
    final bool readonly;
+   final TextInputType? keyboardType;
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
       enabled: isEnabled,
       readOnly: readonly,
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: kSmallTextStyle,

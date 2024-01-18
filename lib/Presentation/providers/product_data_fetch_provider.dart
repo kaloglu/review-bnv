@@ -1,8 +1,9 @@
-import 'package:cihan_app/models/product_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/product_info_model.dart';
-import '../models/rules_model.dart';
+
+import '../../Domain/models/product_info_model.dart';
+import '../../Domain/models/product_model.dart';
+import '../../Domain/models/rules_model.dart';
 
 final productInfoImagesStreamProvider =
     StreamProvider.autoDispose<List<Map<String, dynamic>>>((ref) {
@@ -28,23 +29,7 @@ final productInfoImagesStreamProvider =
   return stream;
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-final productsStreamProvider =
-    StreamProvider<List<ProductModel>>((ref) {
+final productsStreamProvider = StreamProvider<List<ProductModel>>((ref) {
   // Reference to the Firestore collection
 
   final firebasefirestore = FirebaseFirestore.instance.collection('raffles');
@@ -75,14 +60,8 @@ final productsStreamProvider =
         endDate: data['endDate'],
         //resultDate: data['resultDate'],
         requiredTickets: data['requiredTickets'],
-       tags: tags,
+        tags: tags,
         category: data['category'],
-
-
-
-
-
-
 
         productInfo: productInfo,
         rules: rules,

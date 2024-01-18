@@ -7,9 +7,12 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 
 HeaderBuilder headerImage(String assetName) {
   return (context, constraints, _) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Image.asset(assetName),
+    return SizedBox(
+      height: 110,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 50),
+        child: Image.asset(assetName),
+      ),
     );
   };
 }

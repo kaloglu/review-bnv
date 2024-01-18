@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/enroll_model.dart';
+import '../../Domain/models/enroll_model.dart';
+
+
 
 final enrollStreamProvider =
     StreamProvider.autoDispose<List<EnrollModel>>((ref) {

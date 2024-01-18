@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none' 
 
-version: 1.4.3
+version: 1.5.0
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -32,7 +32,7 @@ dependencies:
   flutter_riverpod: ^2.3.6
   firebase_app_check: ^0.1.4+3
   intl: any
-  cached_network_image: ^3.2.3
+  cached_network_image: ^3.3.1
   flutter_html: ^3.0.0-beta.2
   chips_choice: ^3.0.0
   flutter_timer_countdown: ^1.0.5
@@ -51,6 +51,17 @@ dependencies:
   shared_preferences: ^2.2.0
   share_plus: ^7.1.0
   flutter_branch_sdk: ^6.7.0
+  shimmer: ^3.0.0
+  flutter_native_splash: any
+  connectivity_plus: ^5.0.2
+  flutter_offline: ^3.0.1
+
+
+
+
+
+
+
 
 
 
@@ -59,7 +70,24 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.0
-  
+  flutter_launcher_icons: ^0.13.1
+
+
+flutter_native_splash:
+  android: true
+  ios: true
+  image: "assets/images/splashlogo.png"
+  color: "#FFFFFF"
+  android_12:
+    image: "assets/splashlogo.png"
+    color: "#FFFFFF"
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/playstore-icon.png"
+
+
 
 flutter:
 
@@ -67,6 +95,8 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/playstore-icon.png
+    - assets/splashlogo.png
 
 
   fonts:

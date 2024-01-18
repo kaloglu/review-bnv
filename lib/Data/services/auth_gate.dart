@@ -7,10 +7,10 @@ import 'package:cihan_app/presentation/screens/home_screen.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../presentation/utils/Text.dart';
-import '../constants/text_styles.dart';
-import '../presentation/utils/auth_decoration.dart';
-import '../presentation/utils/shimmer_effect.dart';
+import '../../Presentation/constants/text_styles.dart';
+import '../../Presentation/utils/Text.dart';
+import '../../Presentation/utils/auth_decoration.dart';
+import '../../Presentation/utils/shimmer_effect.dart';
 
 class AuthGate extends StatefulWidget {
   const AuthGate({Key? key}) : super(key: key);
@@ -42,7 +42,6 @@ class _AuthGateState extends State<AuthGate> {
 
   @override
   Widget build(BuildContext context) {
-
     final buttonStyle = ButtonStyle(
       padding: MaterialStateProperty.all(const EdgeInsets.all(12)),
       shape: MaterialStateProperty.all(
@@ -92,7 +91,8 @@ class _AuthGateState extends State<AuthGate> {
                             ),
                           );
                         },
-                        headerBuilder: headerImage('assets/images/splashlogo.png'),
+                        headerBuilder:
+                            headerImage('assets/images/splashlogo.png'),
                         footerBuilder: (context, action) {
                           return const Center(
                             child: Padding(
@@ -181,47 +181,6 @@ class _AuthGateState extends State<AuthGate> {
                   },
                 );
               },
-              // return SignInScreen(
-              //   sideBuilder: sideIcon(Icons.account_box_sharp),
-              //   subtitleBuilder: (context, action) {
-              //     return Padding(
-              //       padding: const EdgeInsets.only(bottom: 8, left: 7),
-              //       child: Column(
-              //         children: [
-              //           Text(
-              //             AppStrings.heyThere,
-              //             style: kMediumTextStyle,
-              //           ),
-              //           Text(
-              //             AppStrings.welcome,
-              //             style: kLargeTextStyle,
-              //           ),
-              //         ],
-              //       ),
-              //     );
-              //   },
-              //     footerBuilder: (context, action) {
-              //       return const Center(
-              //         child: Padding(
-              //           padding: EdgeInsets.only(top: 50),
-              //           child: Text(
-              //             AppStrings.bySigningInYouAgreeToOurTermsAndConditions,
-              //             style: TextStyle(color: Colors.grey),
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //     showAuthActionSwitch: false,
-              //     actions: [
-              //       VerifyPhoneAction((context, _) {
-              //         Navigator.pushNamed(context, '/phone');
-              //       }),
-              //     ],
-              //   );
-              // },
-              // '/home': (context) {
-              //   return HomeScreen();
-              // },
               '/phone': (context) {
                 return PhoneInputScreen(
                   actions: [
@@ -275,12 +234,6 @@ class _AuthGateState extends State<AuthGate> {
               } else {
                 // Handle loading state, e.g., show a loading spinner
                 return const ShimmerLoader();
-                //   Container(
-                //   color: Colors.white, // Set the background color to white
-                //   child: const Center(
-                //     child: CircularProgressIndicator(),
-                //   ),
-                // );
               }
             },
           );
@@ -289,138 +242,3 @@ class _AuthGateState extends State<AuthGate> {
     );
   }
 }
-
-// import 'package:cihan_app/presentation/screens/edit_profile_screen.dart';
-// import 'package:cihan_app/presentation/screens/home_screen.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
-// import 'package:flutter/material.dart';
-// import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import '../constants/text_styles.dart';
-// import '../presentation/utils/auth_decoration.dart';
-//
-// class AuthGate extends StatelessWidget {
-//   const AuthGate({Key? key}) : super(key: key);
-//
-//   Future<bool> isProfileCompleted() async {
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-//     return prefs.getBool('profileCompleted') ?? false;
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final FirebaseAuth _auth = FirebaseAuth.instance;
-//
-//     final buttonStyle = ButtonStyle(
-//       padding: MaterialStateProperty.all(const EdgeInsets.all(12)),
-//       shape: MaterialStateProperty.all(
-//         RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-//       ),
-//     );
-//
-//     return StreamBuilder<User?>(
-//         stream: FirebaseAuth.instance.authStateChanges(),
-//         initialData: FirebaseAuth.instance.currentUser,
-//         builder: (context, snapshot) {
-//           // User is not signed in
-//           if (!snapshot.hasData) {
-//             return MaterialApp(
-//               theme: ThemeData(
-//                 brightness: Brightness.light,
-//                 visualDensity: VisualDensity.comfortable,
-//                 useMaterial3: true,
-//                 inputDecorationTheme: const InputDecorationTheme(
-//                   border: OutlineInputBorder(),
-//                 ),
-//                 elevatedButtonTheme:
-//                 ElevatedButtonThemeData(style: buttonStyle),
-//                 textButtonTheme: TextButtonThemeData(style: buttonStyle),
-//                 outlinedButtonTheme:
-//                 OutlinedButtonThemeData(style: buttonStyle),
-//               ),
-//               routes: {
-//                 '/': (context) {
-//                   return SignInScreen(
-//
-//                     sideBuilder: sideIcon(Icons.account_box_sharp),
-//                     subtitleBuilder: (context, action) {
-//
-//                       return Padding(
-//                           padding: const EdgeInsets.only(bottom: 8, left: 7),
-//                           child: Column(
-//                             children: [
-//                               Text(
-//                                 'Hey there,',
-//                                 style: kMediumTextStyle,
-//                               ),
-//                               Text(
-//                                 'Welcome ',
-//                                 style: kLargeTextStyle,
-//                               ),
-//                             ],
-//                           ));
-//                     },
-//                     footerBuilder: (context, action) {
-//                       return const Center(
-//                         child: Padding(
-//                           padding: EdgeInsets.only(top: 50),
-//                           child: Text(
-//                             'By signing in, you agree to our terms and conditions.',
-//                             style: TextStyle(color: Colors.grey),
-//                           ),
-//                         ),
-//                       );
-//                     },
-//                     showAuthActionSwitch: false,
-//                     actions: [
-//                       VerifyPhoneAction((context, _) {
-//                         Navigator.pushNamed(context, '/phone');
-//                       }),
-//                     ],
-//                   );
-//                 },
-//                 '/home': (context) {
-//                   return  HomeScreen();
-//                 },
-//                 '/phone': (context) {
-//                   return PhoneInputScreen(
-//                     actions: [
-//                       SMSCodeRequestedAction((context, action, flowKey, phone) {
-//                         Navigator.of(context).pushReplacementNamed(
-//                           '/sms',
-//                           arguments: {
-//                             'action': action,
-//                             'flowKey': flowKey,
-//                             'phone': phone,
-//                           },
-//                         );
-//                       }),
-//                     ],
-//                     headerBuilder: headerIcon(Icons.phone),
-//                     sideBuilder: sideIcon(Icons.phone),
-//                   );
-//                 },
-//                 '/sms': (context) {
-//                   final arguments = ModalRoute.of(context)?.settings.arguments
-//                   as Map<String, dynamic>?;
-//
-//                   return SMSCodeInputScreen(
-//                     actions: [
-//                       AuthStateChangeAction<SignedIn>((context, state) {
-//                         Navigator.of(context).pushReplacementNamed('/home');
-//                       })
-//                     ],
-//                     flowKey: arguments?['flowKey'],
-//                     action: arguments?['action'],
-//                   );
-//                 },
-//               },
-//               debugShowCheckedModeBanner: false,
-//             );
-//           }
-//            return EditProfileScreen(users: snapshot.data,);
-//         },
-//     );
-//   }
-// }

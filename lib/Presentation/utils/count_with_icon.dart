@@ -1,7 +1,6 @@
 import 'package:cihan_app/presentation/utils/spacing.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/text_styles.dart';
 
 class CountWithIcon extends StatelessWidget {
   final String iconPath;

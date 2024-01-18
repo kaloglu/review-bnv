@@ -3,25 +3,23 @@ import 'dart:io';
 import 'package:cihan_app/presentation/screens/home_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:cihan_app/presentation/utils/spacing.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/text_styles.dart';
-import '../utils/icon_buttons.dart';
+import '../constants/app_colors.dart';
+import '../constants/text_styles.dart';
+import '../utils/Text.dart';
+
 import '../utils/profile_edit_textfield.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  EditProfileScreen({Key? key, this.users}) : super(key: key);
+  const EditProfileScreen({Key? key, this.users}) : super(key: key);
 
   final User? users;
 
@@ -32,7 +30,6 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   bool isTwitterOrPhoneLogin = false;
   String? emailValue;
-  bool _profileCompleted = false;
   final firestore = FirebaseFirestore.instance.collection('users');
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -47,7 +44,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   File? selectedImage;
   bool isPhoneLogin() {
     final users = widget.users;
-    return users?.providerData[0]?.providerId == 'phone';
+    return users?.providerData[0].providerId == 'phone';
   }
 
   void getProfileDataFromGoogleAccount() {
@@ -70,7 +67,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       });
     }
 
-    if (users != null && users.providerData[0]?.providerId == 'twitter.com') {
+    if (users != null && users.providerData[0].providerId == 'twitter.com') {
       setState(() {
         isTwitterOrPhoneLogin = true;
       });
@@ -113,7 +110,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             getImage(ImageSource.gallery);
           }
         },
-        child: CircleAvatar(
+        child: const CircleAvatar(
           backgroundColor: Colors.grey, // Replace with default photo color
           radius: 50,
         ),
@@ -168,6 +165,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     fetchProfileData();
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    cityController.dispose();
+    nameController.dispose();
+    addressController.dispose();
+  }
+
   void fetchProfileData() async {
     try {
       final user = widget.users;
@@ -209,7 +217,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               data?['phone'] != null &&
               data?['address'] != null &&
               data?['city'] != null;
-              // data?['country'] != null;
+          // data?['country'] != null;
 
           if (allFieldsFilled) {
             // If all fields are filled, set the profile completion status to true
@@ -375,9 +383,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           textColor: Colors.white,
           fontSize: 16,
         );
+        if (!mounted) {
+          return;
+        }
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
           (route) => false,
         );
       }
@@ -411,7 +422,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           backgroundColor: AppColors.primaryColor,
           centerTitle: true,
           title: Text(
-            'Edit Profile ',
+            AppStrings.editProfile,
             style: kMediumTextStyle.copyWith(
               fontWeight: FontWeight.w700,
             ),
@@ -455,27 +466,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ProfileTextFields(
                     readonly: phoneLogin,
                     controller: nameController,
-                    hintText: 'cihan',
-                    labelText: 'Name',
+                    hintText: 'Please Enter Your Name',
+                    labelText: AppStrings.name,
                   ),
                   ProfileTextFields(
                     readonly: isTwitterOrPhoneLogin ? false : true,
                     controller: emailController,
-                    hintText: 'xyz@gmail.com',
-                    labelText: 'Email',
+                    hintText: 'Please Enter Your Email',
+                    labelText: AppStrings.email,
                   ),
                   ProfileTextFields(
                     readonly: !phoneLogin, // Invert for phone login
                     controller: phoneController,
-                    hintText: '+64231313456',
-                    labelText: 'Phone',
+                    hintText: 'Please Enter Your Number',
+                    labelText: AppStrings.phone,
+                    keyboardType: TextInputType.phone,
                   ),
-
                   TypeAheadFormField<String>(
                     textFieldConfiguration: TextFieldConfiguration(
                       controller: cityController,
                       decoration: InputDecoration(
-                        labelText: 'City',
+                        labelText: AppStrings.city,
                         labelStyle: kSmallTextStyle.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -503,8 +514,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ProfileTextFields(
                     readonly: false,
                     controller: addressController,
-                    hintText: "Istanbul",
-                    labelText: 'Address',
+                    hintText: 'Please Enter Your Address',
+                    labelText: AppStrings.address,
                   ),
                 ],
               ),
@@ -526,7 +537,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     _markProfileCompleted();
                   },
                   child: const Text(
-                    'Update',
+                    AppStrings.update,
                     style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ),
@@ -539,81 +550,169 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _markProfileCompleted() async {
-    setState(() {
-      _profileCompleted = true;
-    });
+    setState(() {});
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('profileCompleted', true);
   }
 }
 
-
 final List<String> turkeyCities = [
-  'Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Adana', 'Antalya', 'Konya',
+  'Istanbul',
+  'Ankara',
+  'Izmir',
+  'Bursa',
+  'Adana',
+  'Antalya',
+  'Konya',
   'Gaziantep',
-  'Mersin', 'Diyarbakir', 'Kayseri', 'Eskisehir', 'Hatay', 'Samsun',
-  'Denizli', 'Sanliurfa',
-  'Adapazari', 'Malatya', 'Kahramanmaras', 'Van', 'Elazig',
-  'Manisa', 'Sivas', 'Gebze',
-  'Balikesir', 'Tarsus', 'Kocaeli', 'Erzurum',
-
-  'Iskenderun', 'Osmaniye', 'Corlu', 'Kutahya', 'Eskisehir',
-  'Nazilli', 'Antakya', 'Gaziantep', 'Sisli',
-  'Muratpasa', 'Aydin', 'Usak', 'Karabuk', 'Karaman', 'Nigde', 'Ordu',
-  'Erzincan', 'Sivas', 'Erzurum', 'Atasehir',
-  'Esenyurt', 'Silivri', 'Gebze', 'Sultangazi',
-  'Basaksehir', 'Elazig',
-  'Yozgat', 'Bagcilar',
-  'Gungoren', 'Sultanbeyli', 'Aksaray', 'Inegol',
-  'Tokat', 'Denizli', 'Malatya', 'Cankaya', 'Umraniye', 'Batman', 'Baglar',
-  'Esenyurt', 'Bahcelievler', 'Van', 'Bakirkoy', 'Siirt', 'Kusadasi',
-  'Orhangazi', 'Karakoy',
-  'Buyukcekmece', '   ', 'Samandira', 'Mardin', 'Ceyhan',
-  'Sarigerme', 'Isparta', 'Bolu', 'Afyonkarahisar', 'Rize', 'Zonguldak',
+  'Mersin',
+  'Diyarbakir',
+  'Kayseri',
+  'Eskisehir',
+  'Hatay',
+  'Samsun',
+  'Denizli',
+  'Sanliurfa',
+  'Adapazari',
+  'Malatya',
+  'Kahramanmaras',
+  'Van',
+  'Elazig',
+  'Manisa',
+  'Sivas',
+  'Gebze',
+  'Balikesir',
+  'Tarsus',
+  'Kocaeli',
+  'Erzurum',
+  'Iskenderun',
+  'Osmaniye',
+  'Corlu',
+  'Kutahya',
+  'Nazilli',
+  'Antakya',
+  'Sisli',
+  'Muratpasa',
+  'Aydin',
+  'Usak',
+  'Karabuk',
+  'Karaman',
+  'Nigde',
+  'Ordu',
+  'Erzincan',
+  'Atasehir',
+  'Esenyurt',
+  'Silivri',
+  'Gebze',
+  'Sultangazi',
+  'Basaksehir',
+  'Yozgat',
+  'Bagcilar',
+  'Gungoren',
+  'Sultanbeyli',
+  'Aksaray',
+  'Inegol',
+  'Tokat',
+  'Cankaya',
+  'Umraniye',
+  'Batman',
+  'Baglar',
+  'Esenyurt',
+  'Bahcelievler',
+  'Van',
+  'Bakirkoy',
+  'Siirt',
+  'Kusadasi',
+  'Orhangazi',
+  'Karakoy',
+  'Buyukcekmece',
+  'Samandira',
+  'Mardin',
+  'Ceyhan',
+  'Sarigerme',
+  'Isparta',
+  'Bolu',
+  'Afyonkarahisar',
+  'Rize',
+  'Zonguldak',
   'Duzce',
-  'Torbali', 'Corum', 'Nazilli', 'Gerede', 'Edirne',
-  'Giresun', 'Karsiyaka',
-  'Ayvalik', 'Milas', 'Iskenderun', 'Didim', 'Marmaris', 'Mudanya', 'Urla',
-  'Denizli', 'Burhaniye',
-  'Beylikduzu', 'Tire', 'Kirklareli', 'Seferihisar', 'Yenisehir',
-  'Belek', 'Dalaman', 'Gocek', 'Kemer',
-  'Kemer', 'Side', 'Demre', 'Ortaca', 'Kusadasi', 'Kumluca', 'Ayvacik',
-  'Ayvacik', 'Golturkbuku', 'Cesme',
-  'Avsallar', 'Kayakoy', 'Pamukkale',
-  'Belek', 'Golturkbuku',
-  'Golturkbuku', 'Kayakoy', 'Kemer', 'Foca', 'Golturkbuku',
-  'Hisaronu', 'Kas', 'Pamukkale',
-  'Koycegiz', 'Selimiye', 'Icmeler', 'Koycegiz', 'Selimiye', 'Guzelcamli',
-  'Gocek', 'Torba', 'Altinkum', 'Ovacik', 'Hisaronu',
-  'Bogazkent', 'Datca', 'Bogazkent', 'Kumkoy', 'Bitez', 'Ortakent',
+  'Torbali',
+  'Corum',
+  'Gerede',
+  'Edirne',
+  'Giresun',
+  'Karsiyaka',
+  'Ayvalik',
+  'Milas',
+  'Didim',
+  'Marmaris',
+  'Mudanya',
+  'Urla',
+  'Burhaniye',
+  'Beylikduzu',
+  'Tire',
+  'Kirklareli',
+  'Seferihisar',
+  'Yenisehir',
+  'Belek',
+  'Dalaman',
+  'Gocek',
+  'Kemer',
+  'Side',
+  'Demre',
+  'Ortaca',
+  'Kumluca',
+  'Ayvacik',
+  'Golturkbuku',
+  'Cesme',
+  'Avsallar',
+  'Kayakoy',
+  'Pamukkale',
+  'Foca',
+  'Hisaronu',
+  'Kas',
+  'Koycegiz',
+  'Selimiye',
+  'Icmeler',
+  'Guzelcamli',
+  'Gocek',
+  'Torba',
+  'Altinkum',
+  'Ovacik',
+  'Bogazkent',
+  'Datca',
+  'Kumkoy',
+  'Bitez',
+  'Ortakent',
   'Kalkan',
-  'Marmaris', 'Sogut', 'Mesudiye', 'Gumbet', 'Oren', 'Turunc',
-  'Bozburun', 'Bodrum', 'Oludeniz', 'Ovacik', 'Ciftlik',
-  'Sogut', 'Gumusluk', 'Turgutreis', 'Gokova',
+  'Marmaris',
+  'Sogut',
+  'Mesudiye',
+  'Gumbet',
+  'Oren',
+  'Turunc',
+  'Bozburun',
+  'Bodrum',
+  'Oludeniz',
+  'Ciftlik',
+  'Gumusluk',
+  'Turgutreis',
+  'Gokova',
   'Akyaka',
-  'Ciftlik', ' Fethiye', 'Oludeniz', 'Mazi',
+  'Fethiye',
+  'Mazi',
   'Kayakoy',
   'Gokbel',
   'Yaniklar',
   'Gulluk',
   'Uzumlu',
-
   'Camyuva',
   'Kucukkuyu',
-
   'Karacabey',
   'Mustafakemalpasa',
-
-  'Bitez',
-  'Uzumlu',
-  'Yaniklar',
   'Bozcaada',
-  'Gumusluk',
-  'Gokceovacik',
-
-  'Gokbel',
-  'Patara'
-      'Faraly'
+  'Patara',
+  'Faraly'
 
   // Add more cities here
 ];

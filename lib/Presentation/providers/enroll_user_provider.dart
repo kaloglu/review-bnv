@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../presentation/utils/Text.dart';
+import '../utils/Text.dart';
+
+
 
 final enrollmentProvider =
     StateNotifierProvider<EnrollmentController, EnrollmentState>((ref) {

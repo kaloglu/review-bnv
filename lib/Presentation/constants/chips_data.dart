@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../models/product_model.dart';
+import '../../Domain/models/product_model.dart';
+
+
 
 List<String> getAvailableChips(List<ProductModel> data) {
   final Set<String> uniqueCategories =

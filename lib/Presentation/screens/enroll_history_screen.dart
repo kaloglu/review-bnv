@@ -1,32 +1,59 @@
-import 'package:cihan_app/presentation/screens/product_details.dart';
 import 'package:cihan_app/presentation/utils/spacing.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/enum_for_date.dart';
-import '../../constants/text_styles.dart';
-import '../../providers/attendees_provider.dart';
-import '../../providers/enroll_provider.dart';
-import '../../providers/home_screen_providers.dart';
-import '../../providers/product_data_fetch_provider.dart';
+import '../../Data/services/connectivity.dart';
+import '../constants/app_colors.dart';
+import '../constants/text_styles.dart';
+import '../providers/enroll_provider.dart';
+import '../utils/Text.dart';
+
 import '../utils/count_with_icon.dart';
-import 'home_screen.dart';
 
 class EnrollHistory extends ConsumerStatefulWidget {
   const EnrollHistory({super.key});
 
   @override
-  _EnrollHistoryState createState() => _EnrollHistoryState();
+  EnrollHistoryState createState() => EnrollHistoryState();
 }
 
-class _EnrollHistoryState extends ConsumerState<EnrollHistory> {
+class EnrollHistoryState extends ConsumerState<EnrollHistory> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final connectivity = ConnectivityService();
+    connectivity.connectivityStream.listen((isConnected) {
+      if (!isConnected) {
+        const CircularProgressIndicator();
+        // Show ShimmerLoader for a few seconds
+        Future.delayed(const Duration(seconds: 3), () {
+          if (!isConnected) {
+
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  content: const Text(
+                    'No internet connection. Please check your network settings.',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () async {
+
+                        Navigator.pop(context);
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ));
+          }
+        });
+      }});
+  }
   @override
   Widget build(BuildContext context) {
-    final productData = ref.watch(productsStreamProvider);
-    final attendeesData = ref.watch(attendeesStreamProvider);
     final enrollData = ref.watch(enrollStreamProvider);
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -34,7 +61,7 @@ class _EnrollHistoryState extends ConsumerState<EnrollHistory> {
         backgroundColor: AppColors.primaryColor,
         centerTitle: true,
         title: Text(
-          'Enroll History',
+          AppStrings.enrollHistory,
           style: kMediumTextStyle.copyWith(
             fontWeight: FontWeight.w700,
           ),
@@ -45,7 +72,7 @@ class _EnrollHistoryState extends ConsumerState<EnrollHistory> {
           if (data.isEmpty) {
             return Center(
               child: Text(
-                'No Data Found',
+                AppStrings.noDataFound,
                 style: kMediumTextStyle.copyWith(fontWeight: FontWeight.w700),
               ),
             );
@@ -68,6 +95,13 @@ class _EnrollHistoryState extends ConsumerState<EnrollHistory> {
                         await productDocRef.collection('attendees').get();
                     final totalAttendeesCount =
                         attendeeCountsSnapshot.docs.length;
+                    // Navigator.of(context).push(
+                    //   MaterialPageRoute(
+                    //     builder: (context) => ProductDetails(
+                    //       attendeeCount: totalAttendeesCount,
+                    //     ),
+                    //   ),
+                    // );
                   },
                   child: Container(
                     margin: const EdgeInsets.symmetric(
@@ -154,6 +188,7 @@ class _EnrollHistoryState extends ConsumerState<EnrollHistory> {
                                             //     productEnrolledsCounts.length;
 
                                             return Text(
+
                                               product.enrollmentCount
                                                   .toString(),
                                               style: kMediumTextStyle.copyWith(
@@ -168,9 +203,35 @@ class _EnrollHistoryState extends ConsumerState<EnrollHistory> {
                                     60.pw,
                                     CountWithIcon(
                                       iconPath: 'assets/images/person1.png',
-                                      count: attendeesData.when(
-                                        data: (attendeesData) {
-                                          if (attendeesData.isEmpty) {
+                                      count: StreamBuilder<QuerySnapshot>(
+                                        stream: FirebaseFirestore.instance
+                                            .collection('raffles')
+                                            .doc(product.raffleid)
+                                            .collection('attendees')
+                                            .snapshots(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const SizedBox(
+                                              width: 20, // Adjust this value as needed
+                                              height: 20, // Adjust this value as needed
+                                              child: CircularProgressIndicator(
+                                                strokeWidth:
+                                                2, // You can adjust the stroke width as needed
+                                              ),
+                                            );
+                                          }
+
+                                          if (snapshot.hasError) {
+                                            return Text(
+                                              'Error: ${snapshot.error}',
+                                              style: kMediumTextStyle.copyWith(
+                                                  fontWeight: FontWeight.w700),
+                                            );
+                                          }
+
+                                          if (!snapshot.hasData ||
+                                              snapshot.data!.docs.isEmpty) {
                                             return Text(
                                               '0',
                                               style: kMediumTextStyle.copyWith(
@@ -178,29 +239,14 @@ class _EnrollHistoryState extends ConsumerState<EnrollHistory> {
                                             );
                                           }
 
-                                          final productAttendeesCounts =
-                                              attendeesData.where((attendee) {
-                                            return attendee.productId ==
-                                                product
-                                                    .raffleid; // Compare with product ID
-                                          }).toList();
-
-                                          final totalAttendeesCount =
-                                              productAttendeesCounts.length;
+                                          final count = snapshot.data!.docs.length;
 
                                           return Text(
-                                            '$totalAttendeesCount',
+                                            '$count',
                                             style: kMediumTextStyle.copyWith(
-                                                fontWeight: FontWeight.w700),
+                                                fontWeight: FontWeight.w100),
                                           );
                                         },
-                                        error: (error, stackTrace) => Text(
-                                          error.toString(),
-                                          style: kMediumTextStyle.copyWith(
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                        loading: () =>
-                                            const CircularProgressIndicator(),
                                       ),
                                     ),
                                   ],

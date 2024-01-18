@@ -1,19 +1,57 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import '../../constants/app_colors.dart';
-import '../../constants/text_styles.dart';
-import '../../providers/ticket_provider.dart';
+import '../../Data/services/connectivity.dart';
+import '../constants/app_colors.dart';
+import '../constants/text_styles.dart';
+import '../providers/ticket_provider.dart';
+import '../utils/Text.dart';
+
 
 class TicketHistory extends ConsumerStatefulWidget {
   const TicketHistory({super.key});
 
   @override
-  _TicketHistoryState createState() => _TicketHistoryState();
+  TicketHistoryState createState() => TicketHistoryState();
 }
 
-class _TicketHistoryState extends ConsumerState<TicketHistory> {
+class TicketHistoryState extends ConsumerState<TicketHistory> {
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final connectivity = ConnectivityService();
+    connectivity.connectivityStream.listen((isConnected) {
+      if (!isConnected) {
+        const CircularProgressIndicator();
+        // Show ShimmerLoader for a few seconds
+        Future.delayed(const Duration(seconds: 3), () {
+          if (!isConnected) {
+
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  content: const Text(
+                    'No internet connection. Please check your network settings.',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () async {
+
+                        Navigator.pop(context);
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ));
+          }
+        });
+      }});
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final ticketData = ref.watch(ticketStreamProvider);
@@ -24,7 +62,7 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
         backgroundColor: AppColors.primaryColor,
         centerTitle: true,
         title: Text(
-          'Ticket History',
+          AppStrings.ticketHistory,
           style: kMediumTextStyle.copyWith(
             fontWeight: FontWeight.w700,
           ),
@@ -35,7 +73,7 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
           if (data.isEmpty) {
             return Center(
               child: Text(
-                'No Data Found',
+                AppStrings.noDataFound,
                 style: kMediumTextStyle.copyWith(fontWeight: FontWeight.w700),
               ),
             );
@@ -45,7 +83,7 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
               itemBuilder: (context, index) {
                 final ticketData = data[index];
 
-                if (ticketData.source.contains('Ad Reward Ticket')) {
+                if (ticketData.source.contains('Ad Reward Tickets')) {
                   return Card(
                     elevation: 3,
                     margin: const EdgeInsets.symmetric(
@@ -72,30 +110,33 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
                               //   style: kMediumTextStyle.copyWith(
                               //       fontWeight: FontWeight.w700),
                               // ),
-                              const SizedBox(width: 91),
+                              const SizedBox(width: 40),
                               const Divider(),
 
                               Column(
                                 children: [
                                   Text(
-                                    'Remain',
+                                    AppStrings.remain,
                                     style: kMediumTextStyle.copyWith(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 12),
                                   ),
-                                  Text('${ticketData.remain.toString()}')
+                                  Text(ticketData.remain.toString())
                                 ],
                               ),
-                              const SizedBox(width: 15),
+                              const SizedBox(width: 16),
                               const Divider(),
 
                               Column(
                                 children: [
                                   const Text(
-                                    'Earn',
+                                    AppStrings.earn,
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
                                   ),
                                   Text(ticketData.earn),
                                 ],
@@ -143,12 +184,12 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
                               Column(
                                 children: [
                                   Text(
-                                    'Remain',
+                                    AppStrings.remain,
                                     style: kMediumTextStyle.copyWith(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 12),
                                   ),
-                                  Text('${ticketData.remain.toString()}')
+                                  Text(ticketData.remain.toString())
                                 ],
                               ),
                               const SizedBox(width: 15),
@@ -175,7 +216,8 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
                   );
                 } else if (ticketData.source.contains('Daily Bonus')) {
                   return Card(
-                    elevation: 3,
+
+                    elevation: 5,
                     margin: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     child: Padding(
@@ -200,13 +242,13 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
                               //   style: kMediumTextStyle.copyWith(
                               //       fontWeight: FontWeight.w700),
                               // ),
-                              const SizedBox(width: 125),
+                              const SizedBox(width: 80),
                               const Divider(),
 
                               Column(
                                 children: [
                                   Text(
-                                    'Remain',
+                                    AppStrings.remain,
                                     style: kMediumTextStyle.copyWith(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 12),
@@ -220,10 +262,13 @@ class _TicketHistoryState extends ConsumerState<TicketHistory> {
                               Column(
                                 children: [
                                   const Text(
-                                    'Earn',
+                                    AppStrings.earn,
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 16,
                                   ),
                                   Text(ticketData.earn.toString()),
                                 ],

@@ -1,5 +1,5 @@
-import 'package:cihan_app/models/product_info_model.dart';
-import 'package:cihan_app/models/rules_model.dart';
+import 'package:cihan_app/Domain/models/product_info_model.dart';
+import 'package:cihan_app/Domain/models/rules_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductModel {

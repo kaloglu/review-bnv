@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/ticket_model.dart';
+import '../../Domain/models/ticket_model.dart';
 
 final ticketStreamProvider =
     StreamProvider.autoDispose<List<TicketModel>>((ref) {

@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../Domain/models/product_model.dart';
 import '../constants/enum_for_date.dart';
-import '../models/product_model.dart';
 
 ProductState getProductState(ProductModel product) {
   final currentDate = DateTime.now();

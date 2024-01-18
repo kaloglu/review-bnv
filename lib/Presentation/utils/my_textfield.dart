@@ -1,5 +1,6 @@
-import 'package:cihan_app/constants/text_styles.dart';
 import 'package:flutter/material.dart';
+
+import '../constants/text_styles.dart';
 
 // ignore: must_be_immutable
 class MyTextField extends StatelessWidget {

@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/profile_model.dart';
+import '../../Domain/models/profile_model.dart';
 
-final profileStreamProvider = StreamProvider.autoDispose<List<ProfileModel>>((ref) {
+final profileStreamProvider =
+    StreamProvider.autoDispose<List<ProfileModel>>((ref) {
   // Reference to the Firestore collection
   User? user = FirebaseAuth.instance.currentUser;
   final firebasefirestore = FirebaseFirestore.instance.collection('users');
@@ -16,7 +17,9 @@ final profileStreamProvider = StreamProvider.autoDispose<List<ProfileModel>>((re
 
   // Filter the collection based on the current user's ID (UID)
   return firebasefirestore
-      .where('uid', isEqualTo: user.uid) // Modify 'uid' to match your field name in Firestore
+      .where('uid',
+          isEqualTo:
+              user.uid) // Modify 'uid' to match your field name in Firestore
       .snapshots()
       .map((snapshot) {
     // Convert each document to a ProfileModel object

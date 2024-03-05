@@ -1,4 +1,7 @@
-﻿abstract class AppStrings {
+﻿
+
+
+abstract class AppStrings {
   static const signIn = "Giriş yap";
   static const heyThere = "Merhaba";
   static const welcome = "Hoş geldin";
@@ -26,8 +29,8 @@
   static const accountSuccessfullyLinked = 'Hesap başarıyla iliskilendirildi.';
 
 
-  static const watchEarn = "Izle ve bilet kazan";
-  static const inviteEarn = "İzle - Kazan";
+  static const watchEarn = "İzle - Kazan";
+  static const inviteEarn = "Davet et - Kazan";
   static const editProfile = "Bilgileri düzenle";
   static const name = "Ad soyad";
   static const city = "Sehir";
@@ -51,7 +54,7 @@
   static const youHaveReachedTheMaximumAllowedEnrollmentsForThisRaffle = "Bu kampanyaya katılım hakkınız dolmustur.";
   static const theMaximumNumberOfAttendeesForThisRaffleHasBeenReached = "Bu kampanyanın katılım sayısı tamamlandı";
   static const enrolledSuccessfully = "Benim Olsun talebiniz tamamlandı. Bol şanslar!";
-  static const notEnoughTicketsToEnroll = "Bu ürünü istemek için yeterli biletiniz bulunmuyor. Izle-Kazan veya Davet et-Kazan butonları ile yeni katılım hakları kazanabilirsiniz.";
-
+  static const notEnoughTicketsToEnroll = "Bu ürünü istemek için yeterli biletiniz bulunmuyor.\nIzle-Kazan veya Davet et-Kazan butonları ile yeni katılım hakları kazanabilirsiniz.";
+  static const okay  ="Tamam";
 
 }

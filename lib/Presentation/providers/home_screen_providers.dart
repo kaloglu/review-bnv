@@ -1,25 +1,47 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../Domain/models/product_model.dart';
+import '../../lang.dart';
 import '../constants/enum_for_date.dart';
 
-ProductState getProductState(ProductModel product) {
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+
+import '../../Domain/models/product_model.dart';
+import '../constants/enum_for_date.dart';
+
+
+
+
+
+
+
+
+
+
+ProductState getProductState(Timestamp startDate, Timestamp endDate) {
   final currentDate = DateTime.now();
 
-  if (currentDate.isBefore(product.startDate.toDate())) {
+  if (currentDate.isBefore(startDate.toDate())) {
     return ProductState.startDate;
-  } else if (currentDate.isBefore(product.endDate.toDate())) {
+  } else if (currentDate.isBefore(endDate.toDate())) {
     return ProductState.endDate;
-
-  //else if (currentDate.isBefore(product.resultDate.toDate()))
-  //{
-    //return ProductState.resultDate;
+    // Add more conditions for other states if needed
+    // } else if (currentDate.isBefore(product.resultDate.toDate())) {
+    //   return ProductState.resultDate;
   } else {
     return ProductState.done;
   }
 }
+
+
+
+
 
 String formatRemainingTime(Duration duration) {
   final hours = duration.inHours;
@@ -34,11 +56,10 @@ String formatRemainingTime(Duration duration) {
 
 
 
-
-final remainingTimeProvider = StreamProvider.family<String, DateTime>((ref, startDate) {
+final remainingTimeProvider = StreamProvider.family<String, Timestamp>((ref, startDate) {
   return Stream.periodic(const Duration(seconds: 1), (_) {
     final currentDate = DateTime.now();
-    final remainingDuration = startDate.difference(currentDate);
+    final remainingDuration = startDate.toDate().difference(currentDate);
 
     if (remainingDuration.isNegative) {
       return '';
@@ -50,7 +71,7 @@ final remainingTimeProvider = StreamProvider.family<String, DateTime>((ref, star
 
       if (days > 0) {
         final dateFormat = DateFormat('dd.MMM.yy');
-        return dateFormat.format(startDate);
+        return dateFormat.format(startDate.toDate());
       } else if (hours > 0) {
         return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
       } else if (minutes > 0) {

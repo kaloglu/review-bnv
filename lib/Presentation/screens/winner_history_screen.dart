@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../Data/services/connectivity.dart';
+import '../../lang.dart';
 import '../constants/app_colors.dart';
 import '../constants/text_styles.dart';
-import '../utils/Text.dart';
 
 
 class WinnerData {
@@ -114,6 +114,9 @@ class WinnerHistoryPageState extends State<WinnerHistoryPage> {
           style: kMediumTextStyle.copyWith(
             fontWeight: FontWeight.w700,
           ),
+        ),
+        iconTheme: const IconThemeData(
+          color: Colors.black, // Change your back button color here
         ),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>?>(

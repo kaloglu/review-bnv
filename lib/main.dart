@@ -6,12 +6,17 @@ import 'package:firebase_ui_oauth_facebook/firebase_ui_oauth_facebook.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:firebase_ui_oauth_twitter/firebase_ui_oauth_twitter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'Data/services/auth_gate.dart';
 import 'Data/services/firebase_message.dart';
 import 'Data/services/secrete_keys.dart';
+import 'Presentation/providers/invite_earn.dart';
 import 'firebase_options.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   // FlutterError.demangleStackTrace = (StackTrace stack) {
@@ -26,9 +31,16 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // Initialize Branch SDK and listen for links
 
   // Initialize other services after Firebase
   MobileAds.instance.initialize();
+
+  await FlutterBranchSdk.init(
+      useTestKey: true, enableLogging: true, disableTracking: false);
+  FlutterBranchSdk.validateSDKIntegration();
+
+  // listenDynamicLinks();
 
   await FirebaseMessage().initNotifications();
 
@@ -59,15 +71,18 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const AuthGate(),
-      debugShowCheckedModeBanner: false,
-      title: 'BedavaNevar',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
+    return OverlaySupport.global(
+      child: MaterialApp(
+        navigatorKey: navigatorKey,
+        home: const AuthGate(),
+        debugShowCheckedModeBanner: false,
+        title: 'BedavaNevar',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.deepPurple,
+          ),
+          useMaterial3: false,
         ),
-        useMaterial3: true,
       ),
     );
   }

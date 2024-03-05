@@ -59,7 +59,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts URIs that begin with "example://gizmos” -->
                 <!-- Registered Callback URLs in TwitterApp -->
-                <data android:scheme="cihan-app"
+                <data android:scheme="BedavaNevar"
                      /> <!-- host is option -->
             </intent-filter>
             <intent-filter>
@@ -81,9 +81,9 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="huzaifautwhh.test-app.link" />
+                <data android:scheme="https" android:host="bedavanevar.app.link" />
                 <!-- example-alternate domain is required for App Links when the Journeys/Web SDK and Deepviews are used inside your website.  -->
-                <data android:scheme="https" android:host="huzaifautwhh-alternate.test-app.link" />
+                <data android:scheme="https" android:host="bedavanevar-alternate.app.link" />
             </intent-filter>
 
 
@@ -108,9 +108,9 @@
             android:name="com.facebook.sdk.ClientToken"
             android:value="@string/facebook_client_token"/>
         <!-- Branch init -->
-        <meta-data android:name="io.branch.sdk.BranchKey" android:value="secret_test_2TBVqAWJJaDqMuBEFu4ETvmU734IWgvF" />
-        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_iDek8OV94rPWJJwfi7ZG7pmfEvhWU5xY" />
-        <meta-data android:name="io.branch.sdk.TestMode" android:value="true" />     <!-- Set to true to use Branch_Test_Key (useful when simulating installs and/or switching between debug and production flavors) -->
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="secret_live_5n2meUa1kYmRgNml3i2GHuO4hUohsCwi" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_live_frpwPZLW608xvRNAqPItDflkyDll6tj7" />
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />     <!-- Set to true to use Branch_Test_Key (useful when simulating installs and/or switching between debug and production flavors) -->
 
 
 

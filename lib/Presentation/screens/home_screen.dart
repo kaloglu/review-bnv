@@ -12,6 +12,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../Domain/models/product_model.dart';
+import '../../lang.dart';
 import '../constants/enum_for_date.dart';
 import '../constants/text_styles.dart';
 import '../providers/attendees_provider.dart';
@@ -20,7 +21,6 @@ import '../providers/product_data_fetch_provider.dart';
 import '../providers/profile_provider.dart';
 import '../providers/search_provider.dart';
 import '../providers/tags.dart';
-import '../utils/Text.dart';
 
 import '../utils/count_with_icon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart' as hooks;
@@ -252,6 +252,77 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                               product.tags
                                   .any((tag) => selectedTags.contains(tag))))
                       .toList();
+                  filteredRaffles.sort((a, b) {
+                    DateTime now = DateTime.now();
+                    DateTime aStartDate = a.startDate.toDate();
+                    DateTime aEndDate = a.endDate.toDate();
+                    DateTime bStartDate = b.startDate.toDate();
+                    DateTime bEndDate = b.endDate.toDate();
+
+                    // Determine if the campaigns are upcoming, ongoing, just ended, or other
+                    bool aIsUpcomingOrOngoing = aStartDate.isAfter(now) || (aStartDate.isBefore(now) && aEndDate.isAfter(now));
+                    bool bIsUpcomingOrOngoing = bStartDate.isAfter(now) || (bStartDate.isBefore(now) && bEndDate.isAfter(now));
+                    bool aJustEnded = aEndDate.isAtSameMomentAs(now) || (aEndDate.isBefore(now) && now.difference(aEndDate).inDays == 0);
+                    bool bJustEnded = bEndDate.isAtSameMomentAs(now) || (bEndDate.isBefore(now) && now.difference(bEndDate).inDays == 0);
+
+                    if (aIsUpcomingOrOngoing && !bIsUpcomingOrOngoing) {
+                      // 'a' is upcoming/ongoing, 'b' is not
+                      return -1;
+                    } else if (!aIsUpcomingOrOngoing && bIsUpcomingOrOngoing) {
+                      // 'b' is upcoming/ongoing, 'a' is not
+                      return 1;
+                    } else if (aJustEnded && !bJustEnded) {
+                      // 'a' just ended, 'b' did not just end and is not upcoming/ongoing
+                      // 'a' should come after all upcoming/ongoing but before 'b'
+                      return -1;
+                    } else if (!aJustEnded && bJustEnded) {
+                      // 'b' just ended, 'a' did not just end and is not upcoming/ongoing
+                      return 1;
+                    }
+
+                    // For other cases or equal priority, sort by startDate to keep chronological order
+                    return aStartDate.compareTo(bStartDate);
+                  });
+
+
+
+
+
+
+                  // filteredRaffles.sort((a, b) {
+                  //   DateTime now = DateTime.now();
+                  //   DateTime aStartDate = a.startDate.toDate();
+                  //   DateTime aEndDate = a.endDate.toDate();
+                  //   DateTime bStartDate = b.startDate.toDate();
+                  //   DateTime bEndDate = b.endDate.toDate();
+                  //
+                  //   // Check if raffles are upcoming or currently running
+                  //   bool aIsUpcomingOrCurrent = aStartDate.isAfter(now) || (aStartDate.isBefore(now) && aEndDate.isAfter(now));
+                  //   bool bIsUpcomingOrCurrent = bStartDate.isAfter(now) || (bStartDate.isBefore(now) && bEndDate.isAfter(now));
+                  //
+                  //   // Upcoming raffles (future start dates) take highest priority
+                  //   if (aStartDate.isAfter(now) && bStartDate.isAfter(now) || aIsUpcomingOrCurrent && bIsUpcomingOrCurrent) {
+                  //     if (aStartDate.isBefore(bStartDate)) {
+                  //       // 'a' starts sooner in the future than 'b' or is closer to now than 'b'
+                  //       return -1;
+                  //     } else if (bStartDate.isBefore(aStartDate)) {
+                  //       return 1;
+                  //     }
+                  //   }
+                  //
+                  //   if (aIsUpcomingOrCurrent && !bIsUpcomingOrCurrent) {
+                  //     // 'a' is upcoming/current but 'b' is not
+                  //     return -1;
+                  //   } else if (!aIsUpcomingOrCurrent && bIsUpcomingOrCurrent) {
+                  //     // 'b' is upcoming/current but 'a' is not
+                  //     return 1;
+                  //   }
+                  //
+                  //   // If both are past or not yet started, sort them by the soonest start date
+                  //   return aStartDate.compareTo(bStartDate);
+                  // });
+
+
 
                   return Expanded(
                       child: filteredRaffles.isEmpty
@@ -316,8 +387,8 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                                   itemCount: filteredRaffles.length,
                                   itemBuilder: (context, index) {
                                     final product = filteredRaffles[index];
-                                    final currentState =
-                                        getProductState(product);
+                                    final currentState = getProductState(
+                                        product!.startDate, product!.endDate);
 
                                     dynamic statusText;
 
@@ -335,7 +406,8 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                                         ProductState.startDate) {
                                       final remainingTime = ref.watch(
                                         remainingTimeProvider(
-                                            product.startDate.toDate()),
+                                            Timestamp.fromDate(
+                                                product.startDate.toDate())),
                                       );
                                       statusText = remainingTime.when(
                                         data: (value) => value,
@@ -347,7 +419,8 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                                     } else {
                                       final remainingTime = ref.watch(
                                         remainingTimeProvider(
-                                            product.endDate.toDate()),
+                                            Timestamp.fromDate(
+                                                product.endDate.toDate())),
                                       );
                                       statusText = remainingTime.when(
                                         data: (value) => value,
@@ -629,4 +702,3 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 }
-

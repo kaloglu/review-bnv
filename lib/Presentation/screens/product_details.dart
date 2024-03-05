@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
+import '../../lang.dart';
 import '../constants/enum_for_date.dart';
 import '../constants/text_styles.dart';
 import '../providers/enroll_user_provider.dart';
@@ -14,7 +15,6 @@ import '../providers/reward_Ad.dart';
 import '../providers/scheduleEndDateCallBack.dart';
 import '../providers/total_attendees_provider.dart';
 import '../providers/user_name_provider.dart';
-import '../utils/Text.dart';
 
 import '../utils/count_with_icon.dart';
 
@@ -51,6 +51,7 @@ class ProductDetails extends ConsumerStatefulWidget {
 
 class ProductDetailsState extends ConsumerState<ProductDetails> {
   bool isButtonEnabled = false;
+
   Future<void> _checkEndDateStatus() async {
     try {
       // Replace 'raffles' with your Firestore collection name
@@ -94,11 +95,11 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
     }
   }
 
-  final bool _adLoading = false;
-  Timer? _loadingTimer;
-  int newTicketCount = 0;
-  bool luckyDrawExecuted = false;
-  late StreamSubscription streamSubscription;
+  // final bool _adLoading = false;
+  // Timer? _loadingTimer;
+  // int newTicketCount = 0;
+  // bool luckyDrawExecuted = false;
+  // late StreamSubscription streamSubscription;
   String status = 'Initial Status';
   //late final StreamController<bool> _buttonEnabledController;
 
@@ -114,15 +115,31 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
     updateTimerStatus();
     createRewardedAd();
     fetchStartAndEndDates(widget.documentId!); // Fetch start and end dates
+    _fetchDatesAndInitialize();
   }
 
   @override
   void dispose() {
     buttonEnabledController.close(); // Close the stream controller
-    _loadingTimer?.cancel(); // Cancel the timer when disposing
+    //loadingTimer?.cancel(); // Cancel the timer when disposing
     rewardedAd?.dispose();
 
     super.dispose();
+  }
+  Future<void> _fetchDatesAndInitialize() async {
+    // Your logic to fetch startDate and endDate from Firestore
+    // After fetching, convert Timestamp to DateTime and assign them to startDate and endDate
+    // For example:
+    // startDate = fetchedStartDate.toDate();
+    // endDate = fetchedEndDate.toDate();
+
+    _checkEndDateStatus(); // And any other initialization logic
+  }
+
+  bool _isButtonVisible() {
+    final now = DateTime.now();
+    if (startDate == null || endDate == null) return false;
+    return now.isAfter(startDate!) && now.isBefore(endDate!);
   }
 
   @override
@@ -160,7 +177,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.only(top: 10),
-        height: 120,
+        height: 90,
         width: MediaQuery.of(context).size.width,
         color: const Color(0XFFFFFFFF),
         child: SingleChildScrollView(
@@ -168,6 +185,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
             children: [
               Consumer(
                 builder: (context, watch, child) {
+
                   final usernamesAsyncValue =
                       ref.watch(usernamesProvider(widget.documentId!));
 
@@ -181,6 +199,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
+                            if (_isButtonVisible())
                             Container(
                               width: 150,
                               height: 40,
@@ -203,7 +222,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                                     },
                                   ),
                                 ),
-                                onPressed: isButtonEnabled &&
+                                onPressed:
                                         !enrollmentState.isEnrollmentInProgress
                                     ? () async {
                                         await enrollUser(widget
@@ -220,11 +239,26 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                                       )
                                     : const Text(
                                         AppStrings.enroll,
-                                        style: TextStyle(color: Colors.black),
+                                        style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
                                       ),
                               ),
                             ),
+                            if (!_isButtonVisible())
+                              const Expanded( // Use Expanded to ensure the text can take the available space if needed
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 20), // Adjust the padding as needed
+                                  child: Text(
+                                    "The event is not active at the moment. Please check back later.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black, // Adjust color as needed
+                                      fontSize: 16, // Adjust font size as needed
+                                    ),
+                                  ),
+                                ),
+                              ),
                             const SizedBox(width: 12),
+                            if (_isButtonVisible())
                             Container(
                               width: 150,
                               height: 40,
@@ -235,24 +269,25 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                               child: ElevatedButton(
                                 style: ButtonStyle(
                                   textStyle: MaterialStateProperty.all(
-                                      const TextStyle(fontSize: 16.5)),
+                                      const TextStyle(fontSize: 16)),
                                   backgroundColor: MaterialStateProperty.all(
                                       const Color(0XFF87ceeb)),
                                 ),
                                 onPressed: () {
-                                  _adLoading ? null : showRewardedAd();
+                                  showRewardedAd();
                                 },
-                                child: _adLoading
-                                    ? const SizedBox(
-                                        width: 30,
-                                        height: 30,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      )
-                                    : const Text(
-                                        AppStrings.earn,
-                                        style: TextStyle(color: Colors.black),
+                                 child:
+                        // _adLoading
+                                //     ? const SizedBox(
+                                //         width: 30,
+                                //         height: 30,
+                                //         child: CircularProgressIndicator(
+                                //           strokeWidth: 2,
+                                //         ),
+                                //       )
+                                    const Text(
+                                        AppStrings.watchEarn,
+                                        style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
                                       ),
                               ),
                             ),
@@ -363,13 +398,16 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                           ),
                         ],
                       ),
+
+
+
                       Consumer(builder: (context, ref, child) {
-                        final currentState = getProductState(product!);
+                        final currentState = getProductState(product!.startDate, product.endDate);
                         Color statusColor;
 
                         if (currentState == ProductState.startDate) {
                           final formattedDate = ref.watch(remainingTimeProvider(
-                              product.startDate.toDate()));
+                              (Timestamp.fromDate(product.startDate.toDate()))));
                           return Text(
                             formattedDate.when(
                               data: (value) => value,
@@ -383,7 +421,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                           );
                         } else if (currentState == ProductState.endDate) {
                           final formattedDate = ref.watch(
-                              remainingTimeProvider(product.endDate.toDate()));
+                              remainingTimeProvider(Timestamp.fromDate(product.endDate.toDate())));
                           return Text(
                             formattedDate.when(
                               data: (value) => value,

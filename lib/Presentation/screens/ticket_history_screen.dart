@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../Data/services/connectivity.dart';
+import '../../lang.dart';
 import '../constants/app_colors.dart';
 import '../constants/text_styles.dart';
 import '../providers/ticket_provider.dart';
-import '../utils/Text.dart';
-
 
 class TicketHistory extends ConsumerStatefulWidget {
   const TicketHistory({super.key});
@@ -16,8 +15,6 @@ class TicketHistory extends ConsumerStatefulWidget {
 }
 
 class TicketHistoryState extends ConsumerState<TicketHistory> {
-
-
   @override
   void initState() {
     // TODO: implement initState
@@ -29,33 +26,30 @@ class TicketHistoryState extends ConsumerState<TicketHistory> {
         // Show ShimmerLoader for a few seconds
         Future.delayed(const Duration(seconds: 3), () {
           if (!isConnected) {
-
             showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  content: const Text(
-                    'No internet connection. Please check your network settings.',
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () async {
-
-                        Navigator.pop(context);
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ));
+                      content: const Text(
+                        'No internet connection. Please check your network settings.',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () async {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ));
           }
         });
-      }});
+      }
+    });
   }
-
 
   @override
   Widget build(BuildContext context) {
     final ticketData = ref.watch(ticketStreamProvider);
-
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
@@ -66,6 +60,9 @@ class TicketHistoryState extends ConsumerState<TicketHistory> {
           style: kMediumTextStyle.copyWith(
             fontWeight: FontWeight.w700,
           ),
+        ),
+        iconTheme: const IconThemeData(
+          color: Colors.black, // Change your back button color here
         ),
       ),
       body: ticketData.when(
@@ -104,15 +101,8 @@ class TicketHistoryState extends ConsumerState<TicketHistory> {
                               ),
                               const SizedBox(height: 5),
                               const Divider(),
-
-                              // Text(
-                              //   DateFormat('dd/MM/yy').format(ticketData.createDate),
-                              //   style: kMediumTextStyle.copyWith(
-                              //       fontWeight: FontWeight.w700),
-                              // ),
                               const SizedBox(width: 40),
                               const Divider(),
-
                               Column(
                                 children: [
                                   Text(
@@ -126,7 +116,6 @@ class TicketHistoryState extends ConsumerState<TicketHistory> {
                               ),
                               const SizedBox(width: 16),
                               const Divider(),
-
                               Column(
                                 children: [
                                   const Text(
@@ -194,16 +183,6 @@ class TicketHistoryState extends ConsumerState<TicketHistory> {
                               ),
                               const SizedBox(width: 15),
                               const Divider(),
-
-                              // Column(
-                              //   children: [
-                              //     const Text(
-                              //       'Earn',
-                              //       style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                              //     ),
-                              //     Text(ticketData.earn.toString()),
-                              //   ],
-                              // ),
                             ],
                           ),
                           Text(
@@ -216,7 +195,6 @@ class TicketHistoryState extends ConsumerState<TicketHistory> {
                   );
                 } else if (ticketData.source.contains('Daily Bonus')) {
                   return Card(
-
                     elevation: 5,
                     margin: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),

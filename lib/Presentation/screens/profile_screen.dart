@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cihan_app/Presentation/providers/ad_reward_profile%20screen.dart';
 import 'package:cihan_app/presentation/screens/edit_profile_screen.dart';
 import 'package:cihan_app/presentation/screens/ticket_history_screen.dart';
 import 'package:cihan_app/presentation/screens/winner_history_screen.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../Data/services/auth_gate.dart';
+import '../../lang.dart';
 import '../constants/app_colors.dart';
 import '../constants/text_styles.dart';
 import '../providers/enroll_provider.dart';
@@ -20,7 +22,6 @@ import '../providers/invite_earn.dart';
 import '../providers/profile_provider.dart';
 import '../providers/reward_Ad.dart';
 import '../providers/ticket_data.dart';
-import '../utils/Text.dart';
 
 import '../utils/container_counter.dart';
 import 'enroll_history_screen.dart';
@@ -32,28 +33,21 @@ class UserProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
-
-
-
-  // final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-  //     GlobalKey<ScaffoldMessengerState>();
-
   @override
   void initState() {
     super.initState();
 
     updateWinCount();
-    initDeepLinkData();
-    listenDynamicLinks();
-    createRewardedAd();
+    // initDeepLinkData();
+    // listenDynamicLinks();
+    createRewardedInterstitialAd();
 
-
-    FlutterBranchSdk.setIdentity('branch_user_test');
+    //FlutterBranchSdk.setIdentity('branch_user_test');
   }
 
   @override
   void dispose() {
-    rewardedAd?.dispose();
+    rewardedInterstitialAd?.dispose();
     super.dispose();
   }
 
@@ -93,8 +87,12 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
             fontWeight: FontWeight.w700,
           ),
         ),
+        iconTheme: const IconThemeData(
+          color: Colors.black, // Change your back button color here
+        ),
         actions: [
           IconButton(
+            color: Colors.black,
             onPressed: () {
               Navigator.push(
                   context,
@@ -223,7 +221,7 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
                               );
                             }
                             final enrollList =
-                                data ; // Handle the case when data is null
+                                data; // Handle the case when data is null
                             final enrollCount = enrollList.length;
                             return Text(
                               enrollCount.toString(),
@@ -268,8 +266,7 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  subtitle:
-                      Text(profileModel.phone),
+                  subtitle: Text(profileModel.phone),
                 ),
                 const Divider(),
                 ListTile(
@@ -288,6 +285,11 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors
+                              .primarySecondaryBackground, // Change the background color
+                          // If AppColors does not have yourCustomColor, replace it with a Color widget, e.g., Colors.blue
+                        ),
                         onPressed: () {
                           Navigator.push(
                               context,
@@ -295,7 +297,7 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
                                   builder: (context) => ProfileScreen(
                                         appBar: AppBar(
                                           title: Text(
-                                          AppStrings.accountManagement,
+                                            AppStrings.accountManagement,
                                             style: kMediumTextStyle.copyWith(
                                               fontWeight: FontWeight.w700,
                                             ),
@@ -314,8 +316,8 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
                                               (route) => false,
                                             );
                                             Fluttertoast.showToast(
-                                              msg:
-                                                  AppStrings.youAreSuccessfullyLogOut,
+                                              msg: AppStrings
+                                                  .youAreSuccessfullyLogOut,
                                               toastLength: Toast.LENGTH_SHORT,
                                               gravity: ToastGravity.BOTTOM,
                                               timeInSecForIosWeb: 1,
@@ -330,8 +332,8 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
                                               const SnackBar(
-                                                content: Text(
-                                                    AppStrings.accountSuccessfullyLinked),
+                                                content: Text(AppStrings
+                                                    .accountSuccessfullyLinked),
                                               ),
                                             );
                                           }),
@@ -351,7 +353,7 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
                       children: [
                         Expanded(
                           child: Container(
-                            width:MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width,
                             //height: 35,
                             margin: const EdgeInsets.all(9),
                             decoration: BoxDecoration(
@@ -361,56 +363,60 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
                               style: ButtonStyle(
                                   textStyle: MaterialStatePropertyAll(
                                       kSmallTextStyle.copyWith(fontSize: 15)),
-                                  backgroundColor: const MaterialStatePropertyAll(
-                                      Color(0XFF87ceeb))),
-                              onPressed:  showRewardedAd,
-                              child:
-                                   // const SizedBox(
-                                   //    width: 20, // Adjust this value as needed
-                                   //    height: 20, // Adjust this value as needed
-                                   //    child: CircularProgressIndicator(
-                                   //      strokeWidth:
-                                   //          2, // You can adjust the stroke width as needed
-                                   //    ),
-                                   //  )
-                                    Text(
-                                      AppStrings.watchEarn,
-                                      style: kSmallTextStyle.copyWith(
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Container(
-                           width: MediaQuery.of(context).size.width,
-                           // height: 35,
-                            margin: const EdgeInsets.all(9),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                  textStyle: MaterialStatePropertyAll(
-                                      kSmallTextStyle.copyWith(fontSize: 16)),
-                                  backgroundColor: const MaterialStatePropertyAll(
-                                      Color(0XFF87ceeb))),
+                                  backgroundColor:
+                                      const MaterialStatePropertyAll(
+                                          Color(0XFF87ceeb))),
                               onPressed: () {
-                                generateLink(context);
+                                showRewardedInterstitialAd();
                               },
-
-                              // ReferAndEarnScreen();
-                              //},
-
-                              child:  Text(
-                                AppStrings.inviteEarn,
+                              child:
+                                  // const SizedBox(
+                                  //    width: 20, // Adjust this value as needed
+                                  //    height: 20, // Adjust this value as needed
+                                  //    child: CircularProgressIndicator(
+                                  //      strokeWidth:
+                                  //          2, // You can adjust the stroke width as needed
+                                  //    ),
+                                  //  )
+                                  Text(
+                                AppStrings.watchEarn,
                                 style: kSmallTextStyle.copyWith(
-                                    fontWeight: FontWeight.w700),
+                                    fontWeight: FontWeight.w900,fontSize: 17),
                               ),
                             ),
                           ),
-                        )
+                        ),
+                      //  const SizedBox(width: 10),
+                        // Expanded(
+                        //   child: Container(
+                        //     width: MediaQuery.of(context).size.width,
+                        //     // height: 35,
+                        //     margin: const EdgeInsets.all(9),
+                        //     decoration: BoxDecoration(
+                        //       borderRadius: BorderRadius.circular(24),
+                        //     ),
+                        //     child: ElevatedButton(
+                        //       style: ButtonStyle(
+                        //           textStyle: MaterialStatePropertyAll(
+                        //               kSmallTextStyle.copyWith(fontSize: 16)),
+                        //           backgroundColor:
+                        //               const MaterialStatePropertyAll(
+                        //                   Color(0XFF87ceeb))),
+                        //       onPressed: () {
+                        //         generateLink(context);
+                        //       },
+                        //
+                        //       // ReferAndEarnScreen();
+                        //       //},
+                        //
+                        //       child: Text(
+                        //         AppStrings.inviteEarn,
+                        //         style: kSmallTextStyle.copyWith(
+                        //             fontWeight: FontWeight.w700),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // )
                       ],
                     ),
                   ],

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cihan_app/presentation/screens/home_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,9 +13,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../lang.dart';
 import '../constants/app_colors.dart';
 import '../constants/text_styles.dart';
-import '../utils/Text.dart';
 
 import '../utils/profile_edit_textfield.dart';
 
@@ -31,6 +32,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   bool isTwitterOrPhoneLogin = false;
   String? emailValue;
   final firestore = FirebaseFirestore.instance.collection('users');
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
@@ -47,31 +49,145 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return users?.providerData[0].providerId == 'phone';
   }
 
-  void getProfileDataFromGoogleAccount() {
-    final users = widget.users;
-    if (users != null && users.displayName != null) {
-      nameController.text = users.displayName!;
-    }
-
-    if (users != null && users.email != null) {
-      emailController.text = users.email!;
-    }
-
-    if (users != null && users.phoneNumber != null) {
-      phoneController.text = users.phoneNumber!;
-    }
-    if (users != null && users.phoneNumber != null) {
-      phoneController.text = users.phoneNumber!;
-      setState(() {
-        isTwitterOrPhoneLogin = true;
-      });
-    }
-
-    if (users != null && users.providerData[0].providerId == 'twitter.com') {
-      setState(() {
-        isTwitterOrPhoneLogin = true;
-      });
-    }
+  @override
+  Widget build(BuildContext context) {
+    final bool phoneLogin = !isPhoneLogin();
+    return ModalProgressHUD(
+      inAsyncCall: showSpinner,
+      child: Scaffold(
+        backgroundColor: Colors.grey.shade100,
+        appBar: AppBar(
+          backgroundColor: AppColors.primaryColor,
+          centerTitle: true,
+          title: Text(
+            AppStrings.editProfile,
+            style: kMediumTextStyle.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          iconTheme: const IconThemeData(
+            color: Colors.black, // Change your back button color here
+          ),
+        ),
+        body: ListView(
+          children: <Widget>[
+            Container(
+              height: 200,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  stops: [0.5, 0.9],
+                  colors: [
+                    Color(0XFF9fd8ef),
+                    Color(0XFFdbf0f9),
+                  ],
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: InkWell(
+                      onTap: () {
+                        // getImage(ImageSource.gallery);
+                      },
+                      child: _buildProfilePhoto(),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  ProfileTextFields(
+                    readonly: phoneLogin,
+                    controller: nameController,
+                    hintText: 'Please Enter Your Name',
+                    labelText: AppStrings.name,
+                  ),
+                  ProfileTextFields(
+                    readonly: isTwitterOrPhoneLogin ? false : true,
+                    controller: emailController,
+                    hintText: 'Please Enter Your Email',
+                    labelText: AppStrings.email,
+                  ),
+                  ProfileTextFields(
+                    readonly: !phoneLogin, // Invert for phone login
+                    controller: phoneController,
+                    hintText: 'Please Enter Your Number',
+                    labelText: AppStrings.phone,
+                    keyboardType: TextInputType.phone,
+                  ),
+                  TypeAheadFormField<String>(
+                    textFieldConfiguration: TextFieldConfiguration(
+                      controller: cityController,
+                      decoration: InputDecoration(
+                        labelText: AppStrings.city,
+                        labelStyle: kSmallTextStyle.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        hintText: 'Select your city',
+                      ),
+                    ),
+                    suggestionsCallback: (pattern) {
+                      return turkeyCities
+                          .where((city) => city
+                              .toLowerCase()
+                              .contains(pattern.toLowerCase()))
+                          .toList();
+                    },
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        title: Text(suggestion),
+                      );
+                    },
+                    onSuggestionSelected: (String? suggestion) {
+                      if (suggestion != null) {
+                        cityController.text = suggestion;
+                      }
+                    },
+                  ),
+                  ProfileTextFields(
+                    readonly: false,
+                    controller: addressController,
+                    hintText: 'Please Enter Your Address',
+                    labelText: AppStrings.address,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SizedBox(
+                width: 150,
+                height: 35,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(13.0),
+                    ),
+                    backgroundColor: const Color.fromRGBO(10, 91, 144, 1),
+                  ),
+                  onPressed: () {
+                    updateProfile();
+                    _markProfileCompleted();
+                  },
+                  child: const Text(
+                    AppStrings.update,
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildProfilePhoto() {
@@ -163,17 +279,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     checkProfileCompletion(); // Call this method to check profile completion status
     getProfileDataFromGoogleAccount();
     fetchProfileData();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    emailController.dispose();
-    phoneController.dispose();
-    cityController.dispose();
-    nameController.dispose();
-    addressController.dispose();
   }
 
   void fetchProfileData() async {
@@ -411,142 +516,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final bool phoneLogin = !isPhoneLogin();
-    return ModalProgressHUD(
-      inAsyncCall: showSpinner,
-      child: Scaffold(
-        backgroundColor: Colors.grey.shade100,
-        appBar: AppBar(
-          backgroundColor: AppColors.primaryColor,
-          centerTitle: true,
-          title: Text(
-            AppStrings.editProfile,
-            style: kMediumTextStyle.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-        body: ListView(
-          children: <Widget>[
-            Container(
-              height: 200,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  stops: [0.5, 0.9],
-                  colors: [
-                    Color(0XFF9fd8ef),
-                    Color(0XFFdbf0f9),
-                  ],
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: InkWell(
-                      onTap: () {
-                        // getImage(ImageSource.gallery);
-                      },
-                      child: _buildProfilePhoto(),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  ProfileTextFields(
-                    readonly: phoneLogin,
-                    controller: nameController,
-                    hintText: 'Please Enter Your Name',
-                    labelText: AppStrings.name,
-                  ),
-                  ProfileTextFields(
-                    readonly: isTwitterOrPhoneLogin ? false : true,
-                    controller: emailController,
-                    hintText: 'Please Enter Your Email',
-                    labelText: AppStrings.email,
-                  ),
-                  ProfileTextFields(
-                    readonly: !phoneLogin, // Invert for phone login
-                    controller: phoneController,
-                    hintText: 'Please Enter Your Number',
-                    labelText: AppStrings.phone,
-                    keyboardType: TextInputType.phone,
-                  ),
-                  TypeAheadFormField<String>(
-                    textFieldConfiguration: TextFieldConfiguration(
-                      controller: cityController,
-                      decoration: InputDecoration(
-                        labelText: AppStrings.city,
-                        labelStyle: kSmallTextStyle.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        hintText: 'Select your city',
-                      ),
-                    ),
-                    suggestionsCallback: (pattern) {
-                      return turkeyCities
-                          .where((city) => city
-                              .toLowerCase()
-                              .contains(pattern.toLowerCase()))
-                          .toList();
-                    },
-                    itemBuilder: (context, suggestion) {
-                      return ListTile(
-                        title: Text(suggestion),
-                      );
-                    },
-                    onSuggestionSelected: (String? suggestion) {
-                      if (suggestion != null) {
-                        cityController.text = suggestion;
-                      }
-                    },
-                  ),
-                  ProfileTextFields(
-                    readonly: false,
-                    controller: addressController,
-                    hintText: 'Please Enter Your Address',
-                    labelText: AppStrings.address,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: SizedBox(
-                width: 150,
-                height: 35,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(13.0),
-                    ),
-                    backgroundColor: const Color.fromRGBO(10, 91, 144, 1),
-                  ),
-                  onPressed: () {
-                    updateProfile();
-                    _markProfileCompleted();
-                  },
-                  child: const Text(
-                    AppStrings.update,
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  void getProfileDataFromGoogleAccount() {
+    final users = widget.users;
+    if (users != null && users.displayName != null) {
+      nameController.text = users.displayName!;
+    }
+
+    if (users != null && users.email != null) {
+      emailController.text = users.email!;
+    }
+
+    if (users != null && users.phoneNumber != null) {
+      phoneController.text = users.phoneNumber!;
+    }
+    if (users != null && users.phoneNumber != null) {
+      phoneController.text = users.phoneNumber!;
+      setState(() {
+        isTwitterOrPhoneLogin = true;
+      });
+    }
+
+    if (users != null && users.providerData[0].providerId == 'twitter.com') {
+      setState(() {
+        isTwitterOrPhoneLogin = true;
+      });
+    }
   }
 
   void _markProfileCompleted() async {

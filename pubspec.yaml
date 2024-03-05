@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none' 
 
-version: 1.5.0
+version: 1.5.5
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -11,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   cupertino_icons: ^1.0.2
   google_fonts: ^4.0.3
   eva_icons_flutter: ^3.1.0
@@ -50,11 +51,15 @@ dependencies:
   google_mobile_ads: ^3.0.0
   shared_preferences: ^2.2.0
   share_plus: ^7.1.0
-  flutter_branch_sdk: ^6.7.0
+  flutter_branch_sdk: ^7.0.4
   shimmer: ^3.0.0
   flutter_native_splash: any
   connectivity_plus: ^5.0.2
   flutter_offline: ^3.0.1
+  flutter_hooks: ^0.20.4
+  overlay_support: ^2.1.0
+  device_preview: ^1.1.0
+
 
 
 
@@ -71,6 +76,7 @@ dev_dependencies:
 
   flutter_lints: ^2.0.0
   flutter_launcher_icons: ^0.13.1
+  riverpod_lint: ^2.3.7
 
 
 flutter_native_splash:
@@ -79,7 +85,7 @@ flutter_native_splash:
   image: "assets/images/splashlogo.png"
   color: "#FFFFFF"
   android_12:
-    image: "assets/splashlogo.png"
+    image: "assets/playstore-icon.png"
     color: "#FFFFFF"
 
 flutter_launcher_icons:
@@ -97,6 +103,7 @@ flutter:
     - assets/images/
     - assets/playstore-icon.png
     - assets/splashlogo.png
+    - assets/dialogueTicket.png
 
 
   fonts:

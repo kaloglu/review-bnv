@@ -5,10 +5,10 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../Data/services/connectivity.dart';
+import '../../lang.dart';
 import '../constants/app_colors.dart';
 import '../constants/text_styles.dart';
 import '../providers/enroll_provider.dart';
-import '../utils/Text.dart';
 
 import '../utils/count_with_icon.dart';
 
@@ -65,6 +65,9 @@ class EnrollHistoryState extends ConsumerState<EnrollHistory> {
           style: kMediumTextStyle.copyWith(
             fontWeight: FontWeight.w700,
           ),
+        ),
+        iconTheme: const IconThemeData(
+          color: Colors.black, // Change your back button color here
         ),
       ),
       body: enrollData.when(

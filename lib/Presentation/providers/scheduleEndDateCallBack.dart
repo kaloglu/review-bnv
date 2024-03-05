@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:cihan_app/presentation/providers/scheduleEndDateCallBack.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'lucky_draw.dart';
@@ -13,9 +14,11 @@ Timer? _loadingTimer;
 bool _timerActive = false;
 int newTicketCount = 0;
 bool luckyDrawExecuted = false;
-late StreamSubscription streamSubscription;
+StreamController<bool> buttonEnabledController = StreamController();
+
+//late StreamSubscription streamSubscription;
 String status = 'Initial Status';
-late final StreamController<bool> buttonEnabledController;
+
 bool isEndDateReached() {
   final now = DateTime.now();
   return endDate != null && now.isAfter(endDate!);
@@ -45,8 +48,8 @@ void scheduleEndDateCallback(DateTime endDate, String documentId) async {
   }
 }
 
-DateTime? startDate;
-DateTime? endDate;
+ DateTime? startDate;
+ DateTime? endDate;
 void fetchStartAndEndDates(String documentId) async {
   final productDocRef = FirebaseFirestore.instance
       .collection('raffles')

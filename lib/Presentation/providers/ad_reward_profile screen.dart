@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import '../../lang.dart';
+import '../utils/lang.dart';
 import '../constants/text_styles.dart';
 import 'enroll_user_provider.dart';
 

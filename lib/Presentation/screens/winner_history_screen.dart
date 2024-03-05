@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../Data/services/connectivity.dart';
-import '../../lang.dart';
+import '../utils/lang.dart';
 import '../constants/app_colors.dart';
 import '../constants/text_styles.dart';
 

@@ -5,7 +5,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../Data/services/connectivity.dart';
-import '../../lang.dart';
+import '../utils/lang.dart';
 import '../constants/app_colors.dart';
 import '../constants/text_styles.dart';
 import '../providers/enroll_provider.dart';

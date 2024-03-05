@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../Presentation/constants/text_styles.dart';
 import '../../Presentation/utils/auth_decoration.dart';
 import '../../Presentation/utils/shimmer_effect.dart';
-import '../../lang.dart';
+import '../../Presentation/utils/lang.dart';
 
 class AuthGate extends StatefulWidget {
   const AuthGate({Key? key}) : super(key: key);

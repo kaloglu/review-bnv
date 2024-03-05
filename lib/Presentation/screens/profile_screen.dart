@@ -10,20 +10,17 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../Data/services/auth_gate.dart';
-import '../../lang.dart';
 import '../constants/app_colors.dart';
 import '../constants/text_styles.dart';
 import '../providers/enroll_provider.dart';
-import '../providers/invite_earn.dart';
 import '../providers/profile_provider.dart';
-import '../providers/reward_Ad.dart';
 import '../providers/ticket_data.dart';
 
 import '../utils/container_counter.dart';
+import '../utils/lang.dart';
 import 'enroll_history_screen.dart';
 
 class UserProfileScreen extends ConsumerStatefulWidget {

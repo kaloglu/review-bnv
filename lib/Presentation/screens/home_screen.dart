@@ -12,7 +12,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../Domain/models/product_model.dart';
-import '../../lang.dart';
+import '../utils/lang.dart';
 import '../constants/enum_for_date.dart';
 import '../constants/text_styles.dart';
 import '../providers/attendees_provider.dart';
@@ -388,7 +388,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                                   itemBuilder: (context, index) {
                                     final product = filteredRaffles[index];
                                     final currentState = getProductState(
-                                        product!.startDate, product!.endDate);
+                                        product.startDate, product.endDate);
 
                                     dynamic statusText;
 
@@ -685,11 +685,13 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
         },
         error: (Object error, StackTrace stackTrace) {
           error.toString();
+          return null;
         },
         loading: () {
           const Center(
             child: CircularProgressIndicator(),
           );
+          return null;
         },
       ),
     );

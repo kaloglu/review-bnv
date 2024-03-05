@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
-import '../../lang.dart';
+import '../utils/lang.dart';
 import '../constants/enum_for_date.dart';
 import '../constants/text_styles.dart';
 import '../providers/enroll_user_provider.dart';

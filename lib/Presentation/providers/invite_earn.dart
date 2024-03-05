@@ -198,10 +198,13 @@ void generateLink(BuildContext context) async {
 
   // Get short URL
   BranchResponse response =
-      await FlutterBranchSdk.getShortUrl(buo: buo!, linkProperties: lp);
+      await FlutterBranchSdk.getShortUrl(buo: buo, linkProperties: lp);
 
   if (response.success) {
-    showGeneratedLink(context, response.result);
+    if(context.mounted){
+      showGeneratedLink(context, response.result);
+    }
+
     // String referralLink = response.result;
 
     // Update referral link with query parameters
@@ -346,7 +349,7 @@ void showGeneratedLink(BuildContext context, String url) async {
 
 void shareLink() async {
   BranchResponse response = await FlutterBranchSdk.showShareSheet(
-      buo: buo!,
+      buo: buo,
       linkProperties: lp,
       messageText: 'Click this Link and Earn Rewards',
       androidMessageTitle: 'My Message Title',

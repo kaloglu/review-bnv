@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../Data/services/connectivity.dart';
-import '../../lang.dart';
+import '../utils/lang.dart';
 import '../constants/app_colors.dart';
 import '../constants/text_styles.dart';
 import '../providers/ticket_provider.dart';

@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cihan_app/presentation/screens/home_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,7 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../lang.dart';
+import '../utils/lang.dart';
 import '../constants/app_colors.dart';
 import '../constants/text_styles.dart';
 

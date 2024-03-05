@@ -1,14 +1,11 @@
-import 'package:cihan_app/Presentation/screens/product_details.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../../lang.dart';
+import '../utils/lang.dart';
 import '../../main.dart';
 import '../constants/text_styles.dart';
 

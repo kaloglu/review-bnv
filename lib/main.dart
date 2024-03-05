@@ -13,7 +13,6 @@ import 'package:overlay_support/overlay_support.dart';
 import 'Data/services/auth_gate.dart';
 import 'Data/services/firebase_message.dart';
 import 'Data/services/secrete_keys.dart';
-import 'Presentation/providers/invite_earn.dart';
 import 'firebase_options.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

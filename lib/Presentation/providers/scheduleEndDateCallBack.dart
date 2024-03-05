@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:cihan_app/presentation/providers/scheduleEndDateCallBack.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'lucky_draw.dart';

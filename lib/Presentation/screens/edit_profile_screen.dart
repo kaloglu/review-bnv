@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cihan_app/presentation/screens/home_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -343,18 +342,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  uploadImage(File image) async {
-    String imageurl = '';
-    // String fileName  = Path.combine(, path1, path2);
-    var reference = FirebaseStorage.instance.ref().child('user/');
-    UploadTask uploadTask = reference.putFile(image);
-
-    TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
-    await taskSnapshot.ref.getDownloadURL().then((value) {
-      imageurl = value;
-    });
-    return imageurl;
-  }
+  // uploadImage(File image) async {
+  //   String imageurl = '';
+  //   // String fileName  = Path.combine(, path1, path2);
+  //   var reference = FirebaseStorage.instance.ref().child('user/');
+  //   UploadTask uploadTask = reference.putFile(image);
+  //
+  //   TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+  //   await taskSnapshot.ref.getDownloadURL().then((value) {
+  //     imageurl = value;
+  //   });
+  //   return imageurl;
+  // }
 
   void updateProfile() async {
     try {
@@ -366,16 +365,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (user != null) {
         final uid = user.uid;
 
-        String? imageUrl;
-        if (selectedImage != null) {
-          imageUrl = await uploadImage(selectedImage!);
-        } else {
-          // If selectedImage is null, use the photo URL from the Google account directly
-          final users = widget.users;
-          if (users != null && users.photoURL != null) {
-            imageUrl = users.photoURL;
-          }
-        }
+         String? imageUrl;
+        // if (selectedImage != null) {
+        //   imageUrl = await uploadImage(selectedImage!);
+        // } else {
+        //   // If selectedImage is null, use the photo URL from the Google account directly
+        //   final users = widget.users;
+        //   if (users != null && users.photoURL != null) {
+        //     imageUrl = users.photoURL;
+        //   }
+        // }
 
         // Continue with the update process
         final dataToSave = <String, dynamic>{};

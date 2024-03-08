@@ -378,12 +378,12 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
                                   Text(
                                 AppStrings.watchEarn,
                                 style: kSmallTextStyle.copyWith(
-                                    fontWeight: FontWeight.w900,fontSize: 17),
+                                    fontWeight: FontWeight.w900, fontSize: 17),
                               ),
                             ),
                           ),
                         ),
-                      //  const SizedBox(width: 10),
+                        //  const SizedBox(width: 10),
                         // Expanded(
                         //   child: Container(
                         //     width: MediaQuery.of(context).size.width,

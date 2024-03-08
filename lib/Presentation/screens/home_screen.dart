@@ -77,8 +77,8 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
         // User hasn't received a ticket for the current day, so create a new ticket
         final newTicketData = {
           'source': 'Daily Bonus', // Replace with your source information
-          'earn': '11', // Replace with the appropriate value for earnings
-          'remain': remainingPoints, // Initial remain value (adjust as needed)
+          'earn': '1', // Replace with the appropriate value for earnings
+          'remain': newTicketCount, // Initial remain value (adjust as needed)
           'createDate': FieldValue.serverTimestamp(),
           'expiryDate': DateTime(currentDate.year, currentDate.month,
               currentDate.day + 1), // Expiration at 00:00 of the next day
@@ -106,7 +106,7 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    checkAndGrantDailyTicket(11);
+    checkAndGrantDailyTicket(1);
     //Listen to connectivity changes
 
     //fetchAvailableTags();
@@ -260,10 +260,16 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                     DateTime bEndDate = b.endDate.toDate();
 
                     // Determine if the campaigns are upcoming, ongoing, just ended, or other
-                    bool aIsUpcomingOrOngoing = aStartDate.isAfter(now) || (aStartDate.isBefore(now) && aEndDate.isAfter(now));
-                    bool bIsUpcomingOrOngoing = bStartDate.isAfter(now) || (bStartDate.isBefore(now) && bEndDate.isAfter(now));
-                    bool aJustEnded = aEndDate.isAtSameMomentAs(now) || (aEndDate.isBefore(now) && now.difference(aEndDate).inDays == 0);
-                    bool bJustEnded = bEndDate.isAtSameMomentAs(now) || (bEndDate.isBefore(now) && now.difference(bEndDate).inDays == 0);
+                    bool aIsUpcomingOrOngoing = aStartDate.isAfter(now) ||
+                        (aStartDate.isBefore(now) && aEndDate.isAfter(now));
+                    bool bIsUpcomingOrOngoing = bStartDate.isAfter(now) ||
+                        (bStartDate.isBefore(now) && bEndDate.isAfter(now));
+                    bool aJustEnded = aEndDate.isAtSameMomentAs(now) ||
+                        (aEndDate.isBefore(now) &&
+                            now.difference(aEndDate).inDays == 0);
+                    bool bJustEnded = bEndDate.isAtSameMomentAs(now) ||
+                        (bEndDate.isBefore(now) &&
+                            now.difference(bEndDate).inDays == 0);
 
                     if (aIsUpcomingOrOngoing && !bIsUpcomingOrOngoing) {
                       // 'a' is upcoming/ongoing, 'b' is not
@@ -283,46 +289,6 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
                     // For other cases or equal priority, sort by startDate to keep chronological order
                     return aStartDate.compareTo(bStartDate);
                   });
-
-
-
-
-
-
-                  // filteredRaffles.sort((a, b) {
-                  //   DateTime now = DateTime.now();
-                  //   DateTime aStartDate = a.startDate.toDate();
-                  //   DateTime aEndDate = a.endDate.toDate();
-                  //   DateTime bStartDate = b.startDate.toDate();
-                  //   DateTime bEndDate = b.endDate.toDate();
-                  //
-                  //   // Check if raffles are upcoming or currently running
-                  //   bool aIsUpcomingOrCurrent = aStartDate.isAfter(now) || (aStartDate.isBefore(now) && aEndDate.isAfter(now));
-                  //   bool bIsUpcomingOrCurrent = bStartDate.isAfter(now) || (bStartDate.isBefore(now) && bEndDate.isAfter(now));
-                  //
-                  //   // Upcoming raffles (future start dates) take highest priority
-                  //   if (aStartDate.isAfter(now) && bStartDate.isAfter(now) || aIsUpcomingOrCurrent && bIsUpcomingOrCurrent) {
-                  //     if (aStartDate.isBefore(bStartDate)) {
-                  //       // 'a' starts sooner in the future than 'b' or is closer to now than 'b'
-                  //       return -1;
-                  //     } else if (bStartDate.isBefore(aStartDate)) {
-                  //       return 1;
-                  //     }
-                  //   }
-                  //
-                  //   if (aIsUpcomingOrCurrent && !bIsUpcomingOrCurrent) {
-                  //     // 'a' is upcoming/current but 'b' is not
-                  //     return -1;
-                  //   } else if (!aIsUpcomingOrCurrent && bIsUpcomingOrCurrent) {
-                  //     // 'b' is upcoming/current but 'a' is not
-                  //     return 1;
-                  //   }
-                  //
-                  //   // If both are past or not yet started, sort them by the soonest start date
-                  //   return aStartDate.compareTo(bStartDate);
-                  // });
-
-
 
                   return Expanded(
                       child: filteredRaffles.isEmpty

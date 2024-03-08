@@ -258,7 +258,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                                 ),
                               ),
                             const SizedBox(width: 12),
-                            if (_isButtonVisible())
+                           // if (_isButtonVisible())
                             Container(
                               width: 150,
                               height: 40,

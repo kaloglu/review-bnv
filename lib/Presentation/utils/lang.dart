@@ -21,14 +21,16 @@ abstract class AppStrings {
   static const signInMethods = 'Giriş Yöntemleri';
   static const enableMoreSignInMethods = 'Diğer yöntemleri aç';
   static const signOut = 'Çıkış';
+  static const image = 'assets/dialogueTicket.png';
   static const deleteAccount = 'Hesabımı sil';
-  static const youEarnedDailyTickets = 'Günlük Çekiliş hakkı kazandınız';
   static const youAreSuccessfullyLogOut = 'Çıkış işlemi tamamlandı';
   static const noInternetConnection = 'İnternet bağlantısı bulunamadı';
-  static const youEarnedTickets = 'Çekiliş hakkı kazandınız';
   static const accountSuccessfullyLinked = 'Hesap başarıyla iliskilendirildi.';
-
-
+  static const noWinnersInThisRaffle = 'Maalesef yeterli katilim olmadi :(';
+  static const tryAgainInaFewSeconds = 'Bir sure sonra tekrar deneyin.';
+  static const youEarnedDailyTickets  = 'Günlük ücretsiz 1 kullanım hakkınız hesabınıza eklendi. :)';
+  static const youEarnedTickets = 'adet Bilet hesabınıza yüklendi';
+  static const theEventIsnotActiveAtTheMomentPleaseCheckBackLater = 'Etkinligin Baslamasina';
   static const watchEarn = "İzle - Kazan";
   static const inviteEarn = "Davet et - Kazan";
   static const editProfile = "Bilgileri düzenle";

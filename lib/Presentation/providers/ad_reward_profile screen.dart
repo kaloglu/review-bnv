@@ -44,7 +44,76 @@ void createRewardedInterstitialAd() {
   if (rewardedInterstitialAd == null) {
     debugPrint('Warning: attempt to show rewarded interstitial before loaded.');
 
-    return Fluttertoast.showToast(msg: "Please Try in a Few seconds",gravity: ToastGravity.CENTER,backgroundColor: Colors.red,textColor: Colors.white);
+    showDialogWithoutContext(
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          // This makes the dialog square
+          borderRadius: BorderRadius.circular(0),
+        ),
+
+        backgroundColor:
+        Colors.white, // Make AlertDialog background transparent
+        content: Column(
+          mainAxisSize: MainAxisSize.min, // Use min size
+          children: <Widget>[
+            Container(
+              width: 100, // Diameter of the circle
+              height:
+              100, // Diameter of the circle, make sure width and height are equal to get a perfect circle
+              decoration: const BoxDecoration(
+                color: Colors.blue, // Your desired background color
+                shape: BoxShape.circle, // This makes the container a circle
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(
+                    8.0), // Adjust padding to avoid the image touching the edges
+                child: ClipOval(
+                  // Clip the image to Oval shape to fit the circle container
+                  child: Image.asset(
+                    'assets/dialogueTicket.png',
+                    color: Colors.black,
+                    // fit: BoxFit.cover, // This ensures the image covers the container space, adjust as needed
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text('Bilgi',
+                style: kMediumTextStyle.copyWith(
+                  fontWeight: FontWeight.w900,
+                )),
+            const SizedBox(height: 10), // Space between icon and text
+            const Text(AppStrings.tryAgainInaFewSeconds),
+            // Your message
+          ],
+        ),
+
+        actions: <Widget>[
+          Center(
+            child: SizedBox(
+              width: 150,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  textStyle: MaterialStateProperty.all(
+                      const TextStyle(fontSize: 16.5)),
+                  backgroundColor:
+                  MaterialStateProperty.all(const Color(0XFF87ceeb)),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  AppStrings.okay,
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w400),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    // return Fluttertoast.showToast(msg: AppStrings.tryAgainInaFewSeconds,gravity: ToastGravity.CENTER,backgroundColor: Colors.red,textColor: Colors.white);
   }
   rewardedInterstitialAd!.fullScreenContentCallback =
       FullScreenContentCallback(
@@ -113,8 +182,81 @@ Future<void> updateFirestoreWithTickets(RewardItem reward) async {
             'expiryDate': DateTime(
                 currentDate.year, currentDate.month, currentDate.day + 1),
           });
-          Fluttertoast.showToast(
-              msg: "You Earned ${reward.amount} rewarded Tickets");
+          showDialogWithoutContext(
+            builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                // This makes the dialog square
+                borderRadius: BorderRadius.circular(0),
+              ),
+
+              backgroundColor:
+              Colors.white, // Make AlertDialog background transparent
+              content: Column(
+                mainAxisSize: MainAxisSize.min, // Use min size
+                children: <Widget>[
+                  Container(
+                    width: 100, // Diameter of the circle
+                    height:
+                    100, // Diameter of the circle, make sure width and height are equal to get a perfect circle
+                    decoration: const BoxDecoration(
+                      color: Colors.blue, // Your desired background color
+                      shape: BoxShape.circle, // This makes the container a circle
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(
+                          8.0), // Adjust padding to avoid the image touching the edges
+                      child: ClipOval(
+                        // Clip the image to Oval shape to fit the circle container
+                        child: Image.asset(
+                          'assets/dialogueTicket.png',
+                          color: Colors.black,
+                          // fit: BoxFit.cover, // This ensures the image covers the container space, adjust as needed
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text('Bilgi',
+                      style: kMediumTextStyle.copyWith(
+                        fontWeight: FontWeight.w900,
+                      )),
+                  const SizedBox(height: 10), // Space between icon and text
+                  Text('${reward.amount}${AppStrings.youEarnedTickets}'),
+                  // Your message
+                ],
+              ),
+
+              actions: <Widget>[
+                Center(
+                  child: SizedBox(
+                    width: 150,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        textStyle: MaterialStateProperty.all(
+                            const TextStyle(fontSize: 16.5)),
+                        backgroundColor:
+                        MaterialStateProperty.all(const Color(0XFF87ceeb)),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(
+                        AppStrings.okay,
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+
+
+
+
+          // Fluttertoast.showToast(
+          //     msg: '${reward.amount} ${AppStrings.youEarnedTickets}');
           // ScaffoldMessenger.of(scaffoldKey.currentContext!).showSnackBar(
           //   SnackBar(content: Text("You Earned $rewardedAd Tickets")),
           // );
@@ -173,7 +315,7 @@ Future<void> updateFirestoreWithTickets(RewardItem reward) async {
                         fontWeight: FontWeight.w900,
                       )),
                   const SizedBox(height: 10), // Space between icon and text
-                  Text("You Earned ${reward.amount} rewarded Tickets"), // Your message
+                  Text('${reward.amount} ${AppStrings.youEarnedTickets}'), // Your message
                 ],
               ),
 
@@ -262,7 +404,7 @@ Future<void> updateFirestoreWithTickets(RewardItem reward) async {
                       fontWeight: FontWeight.w900,
                     )),
                 const SizedBox(height: 10), // Space between icon and text
-                Text("You Earned ${reward.amount} rewarded Tickets"), // Your message
+                Text('${reward.amount} ${AppStrings.youEarnedTickets}'), // Your message
               ],
             ),
 
@@ -459,7 +601,7 @@ Future<void> updateFirestoreWithTickets(RewardItem reward) async {
 //       ad.dispose();
 //
 //       createRewardedAdProfile();
-//       // stopLoadingTimer();
+//       // stopLoadingTimer();flutter devtools
 //     },
 //   );
 //

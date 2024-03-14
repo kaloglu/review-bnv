@@ -364,6 +364,7 @@ class _UserProfileScreen extends ConsumerState<UserProfileScreen> {
                                       const MaterialStatePropertyAll(
                                           Color(0XFF87ceeb))),
                               onPressed: () {
+
                                 showRewardedInterstitialAd();
                               },
                               child:

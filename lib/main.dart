@@ -35,9 +35,9 @@ Future<void> main() async {
   // Initialize other services after Firebase
   MobileAds.instance.initialize();
 
-  await FlutterBranchSdk.init(
-      useTestKey: true, enableLogging: true, disableTracking: false);
-  FlutterBranchSdk.validateSDKIntegration();
+  // await FlutterBranchSdk.init(
+  //     useTestKey: true, enableLogging: true, disableTracking: false);
+  // FlutterBranchSdk.validateSDKIntegration();
 
   // listenDynamicLinks();
 

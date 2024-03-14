@@ -244,16 +244,81 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                               ),
                             ),
                             if (!_isButtonVisible())
-                              const Expanded( // Use Expanded to ensure the text can take the available space if needed
+                               Expanded( // Use Expanded to ensure the text can take the available space if needed
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 20), // Adjust the padding as needed
-                                  child: Text(
-                                    "The event is not active at the moment. Please check back later.",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.black, // Adjust color as needed
-                                      fontSize: 16, // Adjust font size as needed
-                                    ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 13), // Adjust the padding as needed
+                                  child: Column(
+                                    children: [
+                                      const Text(
+                                        AppStrings.theEventIsnotActiveAtTheMomentPleaseCheckBackLater,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.black, // Adjust color as needed
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold// Adjust font size as needed
+                                        ),
+                                      ),
+                                      Consumer(builder: (context, ref, child) {
+                                        final currentState = getProductState(product!.startDate, product.endDate);
+                                        Color statusColor;
+
+                                        if (currentState == ProductState.startDate) {
+                                          final formattedDate = ref.watch(remainingTimeProvider(
+                                              (Timestamp.fromDate(product.startDate.toDate()))));
+                                          return Text(
+                                            formattedDate.when(
+                                              data: (value) => value,
+                                              loading: () => AppStrings.loading,
+                                              error: (error, stackTrace) => 'Error',
+                                            ),
+                                            style: TextStyle(
+                                              color: statusColor = Colors.blue,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        } else if (currentState == ProductState.endDate) {
+                                          final formattedDate = ref.watch(
+                                              remainingTimeProvider(Timestamp.fromDate(product.endDate.toDate())));
+                                          return Text(
+                                            formattedDate.when(
+                                              data: (value) => value,
+                                              loading: () => AppStrings.loading,
+                                              error: (error, stackTrace) => 'Error',
+                                            ),
+                                            style: TextStyle(
+                                              color: statusColor = Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        } else if (currentState == ProductState.resultDate) {
+                                          return Text(
+                                            'In Progress',
+                                            style: TextStyle(
+                                              color: statusColor = Colors.green,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        } else if (currentState == ProductState.done) {
+                                          return Text(
+                                            AppStrings.done,
+                                            style: TextStyle(
+                                              color: statusColor = Colors.orange,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        } else {
+                                          return Text(
+                                            '',
+                                            style: TextStyle(
+                                              color: widget.statusColor,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        }
+                                      }),
+
+
+                                    ],
                                   ),
                                 ),
                               ),
@@ -299,7 +364,7 @@ class ProductDetailsState extends ConsumerState<ProductDetails> {
                     // If the endDate has been reached, check for winners
                     if (usernamesAsyncValue.value?.isEmpty ?? true) {
                       return Text(
-                        "No Winners in this raffle",
+                        AppStrings.noWinnersInThisRaffle,
                         style: kLargeTextStyle,
                         textAlign: TextAlign.center,
                       );

@@ -1,20 +1,8 @@
-# TODO — Başlatma ve Çalışma Doğrulama (BNV)
+# Todo
 
-Not: Her madde Issues.md içinde detaylandırılmıştır. Durumlar: [x] tamamlandı, [ ] bekliyor.
+Aşağıdaki maddeler proje içinde tespit edilen notlar doğrultusunda oluşturulmuştur. Her madde ilgili BNV-#### kimliğiyle Issues.md içinde açıklanmıştır.
 
-## Başlangıç/Çalıştırma
-- [x] BNV-0001: Flutter bağımlılıkları çözümlendi ve uygulama derleniyor/çalışıyor
-- [x] BNV-0002: Firebase başlatma (firebase_options.dart) uygulama açılışında sorunsuz
-- [x] BNV-0003: Kimliksiz akışta FirebaseUI SignInScreen görüntüleniyor (AuthGate çalışıyor)
-- [ ] BNV-0004: Kimlik doğrulama sonrası HomeScreen'e yönlendirme sorunsuz
-
-## Veri & Akışlar
-- [ ] BNV-0005: Firestore sorguları/stream'leri erişilebilir ve hata vermiyor
-
-## Reklam & Bildirimler
-- [ ] BNV-0006: RewardedInterstitialAd kurulumunda çökme yok, temel akış çalışıyor
-- [ ] BNV-0007: Bildirim izinleri ve background handler kaydı problemsiz
-
-## Web & Diğer Platformlar
-- [x] BNV-0008: Web önizlemede CanvasKit ile sayfalar açılıyor
-
+- [x] BNV-0001 — Dokümantasyon uyumu: AGENTS.md içindeki constants dizin yolu proje yapısıyla hizalansın (Ek Not eklendi)
+- [ ] BNV-0002 — Dosya adı düzeltme: `lib/Presentation/providers/ad_reward_profile screen.dart` dosyasını `ad_reward_profile_screen.dart` olarak yeniden adlandır ve importları güncelle
+- [ ] BNV-0003 — İsimlendirme standardizasyonu: `buttonEndDate.dart` ve `reward_Ad.dart` dosyalarını snake_case ile yeniden adlandır ve tüm importları güncelle
+- [ ] BNV-0004 — Yazım hatası: `tagsProvder.dart` dosyasını `tags_provider.dart` olarak yeniden adlandır ve importları güncelle

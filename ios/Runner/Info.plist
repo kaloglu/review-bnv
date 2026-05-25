@@ -62,6 +62,17 @@
 					<string>https://bedavanevar-2019.firebaseapp.com/__/auth/handler</string>
 				</array>
 			</dict>
+			<!-- Google Sign-In URL scheme required on iOS -->
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<string>google</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.414030755976-hnijosttmhj5a15geg2ms6vpiedbhnde</string>
+				</array>
+			</dict>
 		</array>
 		<key>UIStatusBarHidden</key>
 		<false/>

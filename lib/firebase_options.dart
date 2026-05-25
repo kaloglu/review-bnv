@@ -58,7 +58,7 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD0o4oEtRuaNYgaLD8xyNN1shmmDZ9-3rY',
+    apiKey: 'AIzaSyDel_nqQHo3EGU1Z6ImVl-pWtPzvzFgAmI',
     appId: '1:414030755976:android:3c7d3fdb10c13056db473d',
     messagingSenderId: '414030755976',
     projectId: 'bedavanevar-2019',
@@ -73,8 +73,9 @@ class DefaultFirebaseOptions {
     projectId: 'bedavanevar-2019',
     databaseURL: 'https://bedavanevar-2019.firebaseio.com',
     storageBucket: 'bedavanevar-2019.appspot.com',
-    androidClientId: '414030755976-090mhmg7jlbb9uvs9da41otbr7k6ug6g.apps.googleusercontent.com',
+    androidClientId: '414030755976-orngna1ba8t168vbacq3khr9ov6trasr.apps.googleusercontent.com',
     iosClientId: '414030755976-hnijosttmhj5a15geg2ms6vpiedbhnde.apps.googleusercontent.com',
     iosBundleId: 'com.kaloglu.bedavanevar',
   );
+
 }

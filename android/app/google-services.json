@@ -8,6 +8,45 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:414030755976:android:de6bf27a05e95647db473d",
+        "android_client_info": {
+          "package_name": "com.kaloglu.BedavaNeVar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "414030755976-onqmorfkjqpv5rh3e1tcvjt7c2r291st.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDel_nqQHo3EGU1Z6ImVl-pWtPzvzFgAmI"
+        },
+        {
+          "current_key": "AIzaSyD0o4oEtRuaNYgaLD8xyNN1shmmDZ9-3rY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "414030755976-k0n485l1icsoon5s910e7ttpnm883nqs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "414030755976-333ecgfufbcjqijb5k3bnsqclas5t0i0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kaloglu.BedavaNeVar"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:414030755976:android:3c7d3fdb10c13056db473d",
         "android_client_info": {
           "package_name": "com.kaloglu.bedavanevar"
@@ -29,6 +68,9 @@
       ],
       "api_key": [
         {
+          "current_key": "AIzaSyDel_nqQHo3EGU1Z6ImVl-pWtPzvzFgAmI"
+        },
+        {
           "current_key": "AIzaSyD0o4oEtRuaNYgaLD8xyNN1shmmDZ9-3rY"
         }
       ],
@@ -40,7 +82,7 @@
               "client_type": 3
             },
             {
-              "client_id": "414030755976-1dblmam92an86gjh0j7dsblvhj6t3i2f.apps.googleusercontent.com",
+              "client_id": "414030755976-333ecgfufbcjqijb5k3bnsqclas5t0i0.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.kaloglu.BedavaNeVar"
@@ -48,7 +90,8 @@
             }
           ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-0165663276066705~8640565281"
     }
   ],
   "configuration_version": "1"

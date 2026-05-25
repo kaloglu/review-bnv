@@ -8,3 +8,5 @@ Aşağıdaki maddeler proje içinde tespit edilen notlar doğrultusunda oluştur
 - [ ] BNV-0004 — Yazım hatası: `tagsProvder.dart` dosyasını `tags_provider.dart` olarak yeniden adlandır ve importları güncelle
  - [ ] BNV-0005 — Local Run: Java/Gradle uyumsuzluğu (JDK 21 vs Gradle 7.5). Geçici çözüm: Java 17 ile çalıştır. Alternatif: Gradle/AGP yükseltmesi (onay bekliyor)
  - [ ] BNV-0006 — (Opsiyon) Gradle wrapper ve AGP yükseltme planını hazırla (Java 21 uyumlu sürümlere geçiş); etki analizi ve geri alma planı hazırla
+- [ ] BNV-0007 — Android settings.gradle: Flutter plugin loader düzeltmesi (flutter-plugin-loader)
+- [ ] BNV-0008 — AndroidManifest: Activity tam sınıf adını `com.example.cihan_app.MainActivity` ile hizala

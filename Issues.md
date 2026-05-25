@@ -68,3 +68,26 @@ Bu dosya, todo.md içindeki BNV kimliklerinin kapsamını, nedenini ve kabul kri
   - [ ] `./gradlew -v` çıktısı Java 21 ile çalışan Gradle 8.5+ gösterir.
   - [ ] `flutter build apk` ve `flutter run` başarılıdır.
   - [ ] Uygulama çalışma zamanı davranışında geriye dönük bozulma tespit edilmez.
+
+---
+
+## BNV-0007 — Android settings.gradle: Flutter plugin loader düzeltmesi
+- Kapsam: `settings.gradle` içinde `dev.flutter.flutter-gradle-plugin` yerine `dev.flutter.flutter-plugin-loader` tanımlanmalı.
+- Neden: Yanlış loader tanımı, Flutter Android embed kütüphanelerinin derleme sınıf yoluna eklenmesini engelleyip `Unresolved reference: flutter` hatasına yol açar.
+- Çözüm Adımları:
+  1. `plugins` bloğunda `dev.flutter.flutter-plugin-loader` eklentisini uygula.
+  2. `dev.flutter.flutter-gradle-plugin` tanımını `apply false` olarak kaldır.
+  3. Temiz derleme al.
+- Kabul Kriterleri:
+  - [ ] Kotlin derlemesi sırasında `io.flutter.embedding.android.FlutterActivity` çözümlenebilmeli.
+  - [ ] `assembleDebug` hatasız tamamlanmalı.
+
+## BNV-0008 — AndroidManifest: Activity tam sınıf adı uyumu
+- Kapsam: Manifest’te `android:name=".MainActivity"` yerine tam nitelikli `com.example.cihan_app.MainActivity` kullanımı.
+- Neden: `applicationId` ile Activity sınıf paket adı farklı olduğunda kısaltılmış ad yanlış sınıfa çözümlenebilir.
+- Çözüm Adımları:
+  1. Manifest’te Activity adını tam nitelikli sınıf adıyla güncelle.
+  2. Uygulama başarıyla başlatılabilmeli.
+- Kabul Kriterleri:
+  - [ ] Uygulama açılış Activity’si doğru sınıfa işaret eder.
+  - [ ] Çalışma zamanı çakışması/ActivityNotFound hatası görülmez.

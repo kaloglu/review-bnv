@@ -1,9 +1,9 @@
+import 'package:cihan_app/Presentation/screens/home_screen.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cihan_app/presentation/screens/edit_profile_screen.dart';
-import 'package:cihan_app/presentation/screens/home_screen.dart';
+import 'package:cihan_app/Presentation/screens/edit_profile_screen.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

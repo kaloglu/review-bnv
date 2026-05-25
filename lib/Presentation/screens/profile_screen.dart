@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:cihan_app/Presentation/providers/ad_reward_profile%20screen.dart';
-import 'package:cihan_app/presentation/screens/edit_profile_screen.dart';
-import 'package:cihan_app/presentation/screens/ticket_history_screen.dart';
-import 'package:cihan_app/presentation/screens/winner_history_screen.dart';
-import 'package:cihan_app/presentation/utils/spacing.dart';
+import 'package:cihan_app/Presentation/screens/edit_profile_screen.dart';
+import 'package:cihan_app/Presentation/screens/ticket_history_screen.dart';
+import 'package:cihan_app/Presentation/screens/winner_history_screen.dart';
+import 'package:cihan_app/Presentation/utils/spacing.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';

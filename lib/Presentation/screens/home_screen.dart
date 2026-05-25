@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cihan_app/presentation/screens/product_details.dart';
-import 'package:cihan_app/presentation/screens/profile_screen.dart';
-import 'package:cihan_app/presentation/utils/shimmer_effect.dart';
-import 'package:cihan_app/presentation/utils/spacing.dart';
+import 'package:cihan_app/Presentation/screens/product_details.dart';
+import 'package:cihan_app/Presentation/screens/profile_screen.dart';
+import 'package:cihan_app/Presentation/utils/shimmer_effect.dart';
+import 'package:cihan_app/Presentation/utils/spacing.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';

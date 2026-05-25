@@ -43,3 +43,28 @@ Bu dosya, todo.md içindeki BNV kimliklerinin kapsamını, nedenini ve kabul kri
 - Kabul Kriterleri:
   - [ ] Dosya adı yazım hatasından arındırılmış olmalı.
   - [ ] Derleme hatası olmamalı; importlar güncellenmiş olmalı.
+
+---
+
+## BNV-0005 — Local Run: Java/Gradle uyumsuzluğu (JDK 21 vs Gradle 7.5)
+- Kapsam: Dreamflow Local Run sırasında "Unsupported class file major version 65" hatası. Bu, yerelde Java 21 (classfile 65) ile Gradle 7.5 çalıştırılmasından kaynaklanır.
+- Neden: Projede `android/gradle/wrapper/gradle-wrapper.properties` Gradle 7.5'i işaret ediyor. Gradle 7.5, Java 21 ile çalıştırılmayı desteklemez.
+- Çözüm Seçenekleri:
+  1) Hızlı ve düşük risk: Yerelde Java 17 ile çalıştır (JAVA_HOME/Gradle JDK'yi 17'ye sabitle).
+  2) Alternatif: Gradle/AGP yükselt (Java 21 ile uyumlu sürümlere geç). Etki analizi gerekir.
+- Kabul Kriterleri:
+  - [ ] Local Run ile `flutter run` sorunsuz tamamlanır, derleme hatası alınmaz.
+  - [ ] Seçilen çözüm ve uygulanan adımlar bu dosyaya not düşülür.
+
+## BNV-0006 — (Opsiyon) Gradle wrapper ve AGP yükseltme planı (Java 21 uyum)
+- Kapsam: Gradle 8.5+ ve uyumlu Android Gradle Plugin sürümüne geçiş; Kotlin sürümünün eşgüdümü; gerekli Gradle/AGP betik değişiklikleri.
+- Neden: Yerelde Java 21 kullanmak istendiğinde Gradle 7.x/AGP 7.x zinciri uyumsuzdur.
+- Çözüm Adımları (onay sonrası):
+  1. Gradle wrapper'ı 8.5+ sürümüne güncelle.
+  2. AGP'yi 8.x uyumlu sürüme çıkar; Kotlin sürümünü matris uyarınca hizala.
+  3. Gerekirse `settings.gradle`/`build.gradle` DSL farklarını uygula, `compileSdk`/`targetSdk` değerlerini doğrula.
+  4. Temiz derleme alındığını doğrula.
+- Kabul Kriterleri:
+  - [ ] `./gradlew -v` çıktısı Java 21 ile çalışan Gradle 8.5+ gösterir.
+  - [ ] `flutter build apk` ve `flutter run` başarılıdır.
+  - [ ] Uygulama çalışma zamanı davranışında geriye dönük bozulma tespit edilmez.

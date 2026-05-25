@@ -4,50 +4,51 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:share_plus/share_plus.dart';
 
-final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
-    GlobalKey<ScaffoldMessengerState>();
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 int newTicketCount = 0;
 
-//BranchContentMetaData metadata = BranchContentMetaData();
-late BranchUniversalObject buo;
-BranchLinkProperties lp = BranchLinkProperties();
-//BranchEvent? eventStandard;
-//BranchEvent? eventCustom;
-
-StreamSubscription<Map>? streamSubscription;
-StreamController<String> controllerData = StreamController<String>();
-//StreamController<String> controllerInitSession = StreamController<String>();
+StreamSubscription<PendingDynamicLinkData>? streamSubscription;
+final StreamController<String> controllerData = StreamController<String>();
 User? senderUserId = FirebaseAuth.instance.currentUser;
-// Define it here to make it accessible in generateLink
+String? lastGeneratedInviteUrl;
 
 void listenDynamicLinks() async {
-  debugPrint('Starting dynamic link listener...');
+  debugPrint('Dinamik bağlantı dinleyicisi başlatılıyor...');
+  try {
+    // Uygulama açıkken gelen linkler
+    streamSubscription = FirebaseDynamicLinks.instance.onLink.listen((data) async {
+      final deepLink = data.link;
+      controllerData.sink.add(deepLink.toString());
+      final referrer = deepLink.queryParameters['senderUserId'];
+      final uniqueLinkId = deepLink.queryParameters['uniqueLinkId'];
+      if (referrer != null) {
+        await updateSenderPoints(referrer, {'uniqueLinkId': uniqueLinkId});
+        debugPrint('Dinamik bağlantı yakalandı: senderUserId=$referrer uniqueLinkId=$uniqueLinkId');
+      }
+    }, onError: (error) {
+      debugPrint('DynamicLinks onLink hata: $error');
+    });
 
- streamSubscription = FlutterBranchSdk.listSession().listen((data) async {
-    debugPrint('Dynamic link data received: $data');
-    controllerData.sink.add((data.toString()));
-
-    if (data.containsKey('+clicked_branch_link') &&
-        data['+clicked_branch_link'] == true) {
-      debugPrint('Dynamic link clicked!');
-
-      senderUserId = data['+referrer'];
-      Map<dynamic, dynamic> firstParams =
-          await FlutterBranchSdk.getFirstReferringParams();
-
-      // Add logic to update points in Firestore using firstParams
-      await updateSenderPoints(senderUserId.toString(), firstParams);
-      debugPrint('First referring parameters: $firstParams');
+    // Soğuk başlangıç linki
+    final initialData = await FirebaseDynamicLinks.instance.getInitialLink();
+    if (initialData != null) {
+      final deepLink = initialData.link;
+      final referrer = deepLink.queryParameters['senderUserId'];
+      final uniqueLinkId = deepLink.queryParameters['uniqueLinkId'];
+      if (referrer != null) {
+        await updateSenderPoints(referrer, {'uniqueLinkId': uniqueLinkId});
+        debugPrint('Initial dynamic link işlendi: senderUserId=$referrer uniqueLinkId=$uniqueLinkId');
+      }
     }
-  }, onError: (error) {
-    debugPrint('InitSession error: ${error.toString()}');
-  });
+  } catch (e) {
+    debugPrint('DynamicLinks başlatma hatası: $e');
+  }
 }
 
-Future<void> updateSenderPoints(
-    String userId, Map<dynamic, dynamic> firstParams) async {
+Future<void> updateSenderPoints(String userId, Map<dynamic, dynamic> firstParams) async {
   try {
     DocumentSnapshot senderSnapshot =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
@@ -56,7 +57,7 @@ Future<void> updateSenderPoints(
       int currentPoints = senderSnapshot['points'] ?? 0;
 
       // Access and use the uniqueLinkId for tracking or validation
-      String uniqueLinkId = firstParams['uniqueLinkId'];
+      final String? uniqueLinkId = (firstParams['uniqueLinkId'] as String?);
       // Handle cases where uniqueLinkId is missing or invalid
 
       // ... (rest of the code for updating points and custom logic)
@@ -67,9 +68,9 @@ Future<void> updateSenderPoints(
           .collection('tickets')
           .doc()
           .set({
-        'points': currentPoints + 10, // Assuming you want to add 10 points
-        'customParamValue': firstParams['customParam'],
+        'points': currentPoints + 10,
         'uniqueLinkId': uniqueLinkId,
+        'created_at': FieldValue.serverTimestamp(),
       });
 
       debugPrint(
@@ -116,115 +117,32 @@ Future<void> updateSenderPoints(
 //   }
 // }
 
-void initDeepLinkData() {
-  buo = BranchUniversalObject(
-      canonicalIdentifier: 'flutter/branch',
-      //parameter canonicalUrl
-      //If your content lives both on the web and in the app, make sure you set its canonical URL
-      // (i.e. the URL of this piece of content on the web) when building any BUO.
-      // By doing so, we’ll attribute clicks on the links that you generate back to their original web page,
-      // even if the user goes to the app instead of your website! This will help your SEO efforts.
-      // canonicalUrl: 'https://flutter.dev',
-      title: 'BedavaNevar',
-      //imageUrl: '',
-      contentDescription: 'You can win many rewards in this BedavaNevar app',
+void initDeepLinkData() {}
 
-      // contentMetadata: metadata,
-      keywords: ['Plugin', 'Branch', 'Flutter'],
-      publiclyIndex: true,
-      locallyIndex: true,
-      expirationDateInMilliSec:
-          DateTime.now().add(const Duration(days: 365)).millisecondsSinceEpoch);
-
-  lp = BranchLinkProperties(channel: 'android', feature: 'sharing');
-  //parameter alias
-  //Instead of our standard encoded short url, you can specify the vanity alias.
-  // For example, instead of a random string of characters/integers, you can set the vanity alias as *.app.link/devonaustin.
-  // Aliases are enforced to be unique** and immutable per domain, and per link - they cannot be reused unless deleted.
-  // alias: 'https://branch.io', //define link url,
-  //stage: 'new share',
-  //campaign: 'campaign',
-  // tags: ['one', 'two', 'three'])
-  // ..addControlParam('\$uri_redirect_mode', '1')
-  // ..addControlParam('\$ios_nativelink', true)
-  // ..addControlParam('\$match_duration', 7200)
-  // ..addControlParam('\$always_deeplink', true)
-  // ..addControlParam('\$android_redirect_timeout', 750)
-  // ..addControlParam('referring_user_id', 'user_id');
-
-  // eventStandard = BranchEvent.standardEvent(BranchStandardEvent.ADD_TO_CART)
-  // //--optional Event data
-  //   ..transactionID = '12344555'
-  //   ..currency = BranchCurrencyType.BRL
-  //   ..revenue = 1.5
-  //   ..shipping = 10.2
-  //   ..tax = 12.3
-  //   ..coupon = 'test_coupon'
-  //   ..affiliation = 'test_affiliation'
-  //   ..eventDescription = 'Event_description'
-  //   ..searchQuery = 'item 123'
-  //   ..adType = BranchEventAdType.BANNER
-  //   ..addCustomData(
-  //       'Custom_Event_Property_Key1', 'Custom_Event_Property_val1')
-  //   ..addCustomData(
-  //       'Custom_Event_Property_Key2', 'Custom_Event_Property_val2');
-
-  // eventCustom = BranchEvent.customEvent('Custom_event')
-  //   ..addCustomData(
-  //       'Custom_Event_Property_Key1', 'Custom_Event_Property_val1')
-  //   ..addCustomData(
-  //       'Custom_Event_Property_Key2', 'Custom_Event_Property_val2');
-}
-
-void generateLink(BuildContext context) async {
+Future<void> generateLink(BuildContext context) async {
   initDeepLinkData();
-  // Check if senderUserId is available
-  String? senderUserId = FirebaseAuth.instance.currentUser?.uid;
-  if (senderUserId == null) {
-    // Handle error: Unable to get senderUserId
-    return;
-  }
+  final String? uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid == null) return;
 
-  // Generate unique link identifier
-  String uniqueLinkId = UniqueKey().toString();
+  final String uniqueLinkId = UniqueKey().toString();
 
-  // Assuming 'lp' is your BranchLinkProperties instance
-  // Directly add custom parameters using addControlParam
-  lp.addControlParam('senderUserId', senderUserId);
-  lp.addControlParam('uniqueLinkId', uniqueLinkId);
+  // NOT: uriPrefix (https://bnv.page.link) Firebase Console’da yapılandırılmalıdır.
+  final parameters = DynamicLinkParameters(
+    link: Uri.parse('https://bnv.page.link/invite?senderUserId=$uid&uniqueLinkId=$uniqueLinkId'),
+    uriPrefix: 'https://bnv.page.link',
+    androidParameters: const AndroidParameters(packageName: 'com.kaloglu.bedavanevar', minimumVersion: 1),
+    iosParameters: const IOSParameters(bundleId: 'com.kaloglu.bedavanevar'),
+    socialMetaTagParameters: const SocialMetaTagParameters(title: 'BedavaNevar', description: 'BedavaNevar ile ücretsiz çekilişlere katıl!'),
+  );
 
-  // Assuming 'buo' is your BranchUniversalObject instance
-  // Now 'lp' already includes your custom parameters
-
-  // Get short URL
-  BranchResponse response =
-      await FlutterBranchSdk.getShortUrl(buo: buo, linkProperties: lp);
-
-  if (response.success) {
-    if(context.mounted){
-      showGeneratedLink(context, response.result);
-    }
-
-    // String referralLink = response.result;
-
-    // Update referral link with query parameters
-    // String modifiedReferralLink =
-    //     '$referralLink?senderUserId=$senderUserId&uniqueLinkId=$uniqueLinkId';
-
-    // Validate link format (optional)
-    //  Uri linkUri = Uri.parse(modifiedReferralLink);
-    //   if (linkUri.queryParameters.containsKey('senderUserId') ||
-    //       linkUri.queryParameters.containsKey('uniqueLinkId')) {
-    //     // Handle error: senderUserId or uniqueLinkId missing
-    //     return;
-    //   }
-
-    // ... (rest of your existing code for showing or sharing the link)
-  } else {
-    // Handle error: Branch response failed
-    showSnackBar(
-      message: 'Error: ${response.errorCode} - ${response.errorMessage}',
-    );
+  try {
+    final shortLink = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+    final url = shortLink.shortUrl.toString();
+    lastGeneratedInviteUrl = url;
+    if (context.mounted) showGeneratedLink(context, url);
+  } catch (e) {
+    debugPrint('Dinamik bağlantı oluşturma hatası: $e');
+    showSnackBar(message: 'Bağlantı oluşturulamadı');
   }
 }
 // void generateLink(BuildContext context) async {
@@ -348,21 +266,15 @@ void showGeneratedLink(BuildContext context, String url) async {
 }
 
 void shareLink() async {
-  BranchResponse response = await FlutterBranchSdk.showShareSheet(
-      buo: buo,
-      linkProperties: lp,
-      messageText: 'Click this Link and Earn Rewards',
-      androidMessageTitle: 'My Message Title',
-      androidSharingTitle: 'My Share with');
-  // Use this to enable native sharing
-
-  if (response.success) {
-    showSnackBar(message: 'showShareSheet Success', duration: 5);
-  } else {
-    showSnackBar(
-        message:
-            'showShareSheet Error: ${response.errorCode} - ${response.errorMessage}',
-        duration: 5);
+  if (lastGeneratedInviteUrl == null) {
+    showSnackBar(message: 'Önce bağlantı oluşturun');
+    return;
+  }
+  try {
+    await Share.share(lastGeneratedInviteUrl!);
+  } catch (e) {
+    debugPrint('Paylaşım hatası: $e');
+    showSnackBar(message: 'Paylaşım başarısız');
   }
 }
 

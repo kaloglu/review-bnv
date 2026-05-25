@@ -13,6 +13,25 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
+subprojects { subproject ->
+    // afterEvaluate kullanmak yerine, plugin yüklendiği anda güvenli şekilde namespace atayalım
+    def assignNamespace = {
+        def androidExt = subproject.extensions.findByName('android')
+        if (androidExt != null && androidExt.hasProperty('namespace')) {
+            def current = androidExt.namespace
+            if (current == null || current.toString().trim().isEmpty()) {
+                def safeName = subproject.name.replace('-', '_').replace('.', '_')
+                def defaultNs = "com.example.cihan_app." + safeName
+                androidExt.namespace = defaultNs
+                subproject.logger.lifecycle("[namespace-fix] ${subproject.path} için namespace atandı: ${defaultNs}")
+            }
+        }
+    }
+
+    subproject.plugins.withId('com.android.application') { assignNamespace() }
+    subproject.plugins.withId('com.android.library') { assignNamespace() }
+}
+
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
